@@ -42,7 +42,7 @@ enum dungeon_char_type
 #if TAG_MAJOR_VERSION == 34
     DCHAR_ITEM_ROD,
 #endif
-    DCHAR_ITEM_TALISMAN,
+    DCHAR_ITEM_TALISMAN, // Daniel - Low, should we add something here for vaults? If we do also add it to viewchar.cc
     DCHAR_ITEM_MISCELLANY,
     DCHAR_ITEM_CORPSE,
     DCHAR_ITEM_SKELETON,

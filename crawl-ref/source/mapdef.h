@@ -611,12 +611,12 @@ public:
     size_t size() const { return items.size(); }
     bool empty() const { return items.empty(); }
 
-    string add_item(const string &spec, bool fix = false, bool ignore_excluded = false);
+    string add_item(const string &spec, bool fix = false, bool ignore_excluded = false); //Daniel - temp debug
 
     // Set this list to be a copy of the item_spec_slot in list.
     void set_from_slot(const item_list &list, int slot_index);
 
-    bool parse_single_spec(item_spec &result, string s);
+    bool parse_single_spec(item_spec &result, string s); //Daniel - temp debug
 
 private:
     struct item_spec_slot

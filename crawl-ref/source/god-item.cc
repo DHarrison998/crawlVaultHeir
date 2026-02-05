@@ -414,6 +414,7 @@ bool god_hates_item(const item_def &item)
     return god_hates_item_handling(item) != DID_NOTHING;
 }
 
+// Daniel - low make sure gods don't despise vaults, which actually seems to already be the case...
 bool god_despises_item(const item_def &item, god_type which_god)
 {
     if (item.base_type != OBJ_TALISMANS)
@@ -423,6 +424,7 @@ bool god_despises_item(const item_def &item, god_type which_god)
            || which_god == GOD_ZIN;
 }
 
+// Daniel - very low, but what if Gozag loved vaults? Or someone else maybe?
 /**
  * Does the given god like items of the given kind enough to make artefacts
  * from them? (Thematically.)

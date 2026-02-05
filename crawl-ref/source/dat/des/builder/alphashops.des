@@ -8,7 +8,7 @@
 # aren't listed. Letters with less than five items don't get shops. Code exists
 # for shopless letters anyway, so there's less code editing needed if they get
 # new items at some point in the future.
-
+# Daniel - Low, probably need to make sure vaults are added to alliteration shops eventually
 {{
    crawl_require("dlua/util.lua")
 

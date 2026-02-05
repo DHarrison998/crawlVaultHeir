@@ -1187,6 +1187,7 @@ const char *base_type_string(const item_def &item)
     return base_type_string(item.base_type);
 }
 
+// Daniel - Done. High map type to string here for vaults
 const char *base_type_string(object_class_type type)
 {
     switch (type)
@@ -1212,10 +1213,12 @@ const char *base_type_string(object_class_type type)
     case OBJ_TALISMANS: return "talisman";
     case OBJ_GIZMOS: return "gizmo";
     case OBJ_BAUBLES: return "bauble";
+    case OBJ_COFFERS: return "coffer";
     default: return "";
     }
 }
 
+// Daniel - Partially done. High map subtype to string for vaults
 string sub_type_string(const item_def &item, bool known)
 {
     const object_class_type type = item.base_type;
@@ -1309,6 +1312,7 @@ string sub_type_string(const item_def &item, bool known)
     case OBJ_RODS:   return "removed rod";
 #endif
     case OBJ_MISCELLANY: return misc_type_name(sub_type);
+    case OBJ_COFFERS: return coffer_type_name(sub_type);
     case OBJ_TALISMANS: return talisman_type_name(sub_type);
     // these repeat as base_type_string
     case OBJ_ORBS: return "orb of Zot";
@@ -1530,6 +1534,7 @@ static string _name_weapon(const item_def &weap, description_level_type desc,
            + name_with_ego + curse_suffix;
 }
 
+// Daniel - Partially done. High should be simple, no artifacts so it'll just be mapping vault to the name
 // Note that "terse" is only currently used for the "in hand" listing on
 // the game screen.
 string item_def::name_aux(description_level_type desc, bool terse, bool ident,
@@ -1814,6 +1819,10 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
         break;
     }
 
+    case OBJ_COFFERS:
+        buff << coffer_type_name(item_typ);
+        break;
+
     case OBJ_TALISMANS:
         if (is_random_artefact(*this) && !dbname && !basename)
             buff << get_artefact_name(*this, ident);
@@ -1988,6 +1997,7 @@ bool item_type_has_ids(object_class_type base_type)
         || base_type == OBJ_STAVES;
 }
 
+// Daniel - Done. Mid put vault here to make them auto-known, in the first switch I think.
 bool item_type_known(const item_def& item)
 {
     switch (item.base_type)
@@ -2004,6 +2014,7 @@ bool item_type_known(const item_def& item)
 #if TAG_MAJOR_VERSION == 34
     case OBJ_FOOD:
     case OBJ_RODS:
+    case OBJ_COFFERS:
 #endif
         return true;
     default:
@@ -3255,6 +3266,7 @@ string cannot_drink_item_reason(const item_def *item, bool temp,
     return r;
 }
 
+// Daniel - Low, might not need an entry for "is useless", but might? Felid can't get use out of weapon vault for instance. Or if you sacrificed all the relevant skills?
 /**
  * Is an item (more or less) useless to the player? Uselessness includes
  * but is not limited to situations such as:

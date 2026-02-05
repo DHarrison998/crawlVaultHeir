@@ -1529,6 +1529,22 @@ zot_found_broken
 generic_unfound GEM_GENERIC
 generic_unfound_broken
 
+#OBJ_COFFERS
+%sdir item/coffer
+%rim 0
+coffer_weapon_minor COFFER_WEAPON_MINOR
+coffer_weapon_major COFFER_WEAPON_MAJOR
+coffer_armor_minor COFFER_ARMOR_MINOR
+coffer_armor_major COFFER_ARMOR_MAJOR
+coffer_magic_minor COFFER_MAGIC_MINOR
+coffer_magic_major COFFER_MAGIC_MAJOR
+coffer_stealth_minor COFFER_STEALTH_MINOR
+coffer_stealth_major COFFER_STEALTH_MAJOR
+coffer_jewelry_minor COFFER_JEWELRY_MINOR
+coffer_jewelry_major COFFER_JEWELRY_MAJOR
+coffer_aux_minor COFFER_AUX_MINOR
+coffer_aux_major COFFER_AUX_MAJOR
+
 #OBJ_TALISMANS
 %sdir item/talisman
 %rim 0

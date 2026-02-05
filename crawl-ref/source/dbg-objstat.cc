@@ -50,6 +50,7 @@ const static char *stat_out_prefix = "objstat_";
 const static char *stat_out_ext = ".tsv";
 static FILE *stat_outf;
 
+// Daniel - Done. High add vault here to item base type enum
 enum item_base_type
 {
     ITEM_GOLD,
@@ -68,6 +69,7 @@ enum item_base_type
     ITEM_GEMS,
     ITEM_BAUBLES,
     ITEM_PARCHMENTS,
+    ITEM_COFFER,
     NUM_ITEM_BASE_TYPES,
     ITEM_IGNORE = 100,
 };
@@ -104,7 +106,7 @@ static int num_levels = 0;
 // Ex: item_recs[level][item.base_type][item.sub_type][field]
 static map<level_id, map<item_base_type, map<int, map<string, int> > > >
        item_recs;
-static map<item_base_type, vector<string> > item_fields = {
+static map<item_base_type, vector<string> > item_fields = { // Daniel - Done. Question, I have no idea what this mapping is but we probably need it for vaults
     { ITEM_GOLD,
         { "Num", "NumVault", "NumMons", "NumMin", "NumMax", "NumSD" }
     },
@@ -161,6 +163,9 @@ static map<item_base_type, vector<string> > item_fields = {
     { ITEM_PARCHMENTS,
         { "Num", "NumVault", "NumShop", "NumMin", "NumMax", "NumSD" },
     },
+    { ITEM_COFFER,
+        { "Num", "NumVault", "NumShop", "NumMin", "NumMax", "NumSD" },
+    },
 };
 
 enum stat_category_type
@@ -208,11 +213,15 @@ static const vector<string> spell_fields = {
     "Chance", "ChanceVault", "ChanceShop", "ChanceArte"
 };
 
+// Daniel - Done. High, add mapping here for vault base type
 static item_base_type _item_base_type(const item_def &item)
 {
     item_base_type type;
     switch (item.base_type)
     {
+    case OBJ_COFFERS:
+        type = ITEM_COFFER;
+        break;
     case OBJ_TALISMANS:
         type = ITEM_TALISMANS;
         break;
@@ -267,6 +276,7 @@ static item_base_type _item_base_type(const item_def &item)
     return type;
 }
 
+// Daniel - Done. High, add mapping here for vault base type
 static object_class_type _item_orig_base_type(item_base_type base_type)
 {
     object_class_type type;
@@ -315,6 +325,9 @@ static object_class_type _item_orig_base_type(item_base_type base_type)
         break;
     case ITEM_BAUBLES:
         type = OBJ_BAUBLES;
+        break;
+    case ITEM_COFFER:
+        type = OBJ_COFFERS;
         break;
     default:
         type = OBJ_UNASSIGNED;

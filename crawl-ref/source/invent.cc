@@ -213,6 +213,7 @@ string InvEntry::_get_text_preface() const
     return tstr.str();
 }
 
+// Daniel - Done. Mid hotkeys for vaults go here
 void get_class_hotkeys(const int type, vector<char> &glyphs)
 {
     switch (type)
@@ -255,6 +256,9 @@ void get_class_hotkeys(const int type, vector<char> &glyphs)
 #endif
     case OBJ_TALISMANS:
         glyphs.push_back('%');
+        break;
+    case OBJ_COFFERS:
+        glyphs.push_back(']');
         break;
     case OBJ_MISCELLANY:
         glyphs.push_back('}');
@@ -600,7 +604,7 @@ string no_selectables_message(int item_selector)
         return "You aren't carrying any jewellery or talismans.";
     case OSEL_LAUNCHING:
         return "You aren't carrying any items that might be thrown or fired.";
-    case OSEL_EVOKABLE:
+    case OSEL_EVOKABLE: // Daniel - Low we might want to make sure mutations can't stop vaults opening
         if (you.get_mutation_level(MUT_NO_ARTIFICE)) // iffy
             return "You cannot evoke magical items.";
         return "You aren't carrying any items that you can evoke.";
@@ -934,6 +938,7 @@ void InvMenu::sort_menu(vector<InvEntry*> &invitems,
     sort(invitems.begin(), invitems.end(), menu_entry_comparator(cond));
 }
 
+// Daniel - Done. High add vaults here for inventory order
 FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_WEAPONS,
     OBJ_MISSILES,
@@ -944,6 +949,7 @@ FixedVector<int, NUM_OBJECT_CLASSES> inv_order(
     OBJ_RODS,
 #endif
     OBJ_JEWELLERY,
+    OBJ_COFFERS,
     OBJ_TALISMANS,
     OBJ_WANDS,
     OBJ_SCROLLS,
@@ -1151,6 +1157,7 @@ bool in_inventory(const item_def &i)
     return i.pos == ITEM_IN_INVENTORY;
 }
 
+// Daniel - Done. high map vault to string name here
 const char *item_class_name(int type, bool terse)
 {
     if (terse)
@@ -1190,6 +1197,7 @@ const char *item_class_name(int type, bool terse)
         case OBJ_TALISMANS:  return "Talismans";
         case OBJ_GIZMOS:     return "Gizmo";
         case OBJ_BAUBLES:    return "Baubles";
+        case OBJ_COFFERS:     return "Coffers";
         }
     }
     return "";

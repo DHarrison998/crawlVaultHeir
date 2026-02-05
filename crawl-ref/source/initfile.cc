@@ -1023,6 +1023,7 @@ map<string, GameOption*> base_game_options::build_options_map(
     return option_map;
 }
 
+// Daniel - mid add entry here for vault to symbol mapping
 object_class_type item_class_by_sym(char32_t c)
 {
     switch (c)

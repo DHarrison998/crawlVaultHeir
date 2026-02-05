@@ -2049,6 +2049,7 @@ static void _tag_construct_you_items(writer &th)
 
     _marshallFixedBitVector<NUM_MISCELLANY>(th, you.seen_misc);
     _marshallFixedBitVector<NUM_TALISMANS>(th, you.seen_talisman);
+    _marshallFixedBitVector<NUM_COFFER>(th, you.seen_coffer);
 
     for (int i = 0; i < NUM_OBJECT_CLASSES; i++)
         for (int j = 0; j < MAX_SUBTYPES; j++)
@@ -5132,6 +5133,7 @@ static void _tag_read_you_items(reader &th)
     if (th.getMinorVersion() >= TAG_MINOR_TALISMANS_SEEN)
 #endif
     _unmarshallFixedBitVector<NUM_TALISMANS>(th, you.seen_talisman);
+    _unmarshallFixedBitVector<NUM_COFFER>(th, you.seen_coffer);
 
     for (int i = 0; i < iclasses; i++)
         for (int j = 0; j < count2; j++)

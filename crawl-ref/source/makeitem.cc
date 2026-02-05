@@ -1758,6 +1758,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
     }
 }
 
+// Daniel - LOW Probably need this for vaults
 /// For a given dungeon depth (or item level), how much weight should we give
 /// to each talisman tier?
 static const vector<random_pick_entry<int>> talisman_weights =
@@ -1814,6 +1815,7 @@ static void _roll_talisman_type(item_def &item, int lvl)
     }
 }
 
+// Daniel - Late, make this too
 static void _generate_talisman_item(item_def& item, int force_type, int item_level)
 {
     const int lvl = _talisman_level(item_level);

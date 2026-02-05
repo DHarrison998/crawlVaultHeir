@@ -877,6 +877,24 @@ enum item_set_type
     NUM_ITEM_SET_TYPES
 };
 
+// Daniel - enum location
+enum coffer_type
+{
+    COFFER_WEAPON_MINOR,
+    COFFER_WEAPON_MAJOR,
+    COFFER_ARMOR_MINOR,
+    COFFER_ARMOR_MAJOR,
+    COFFER_MAGIC_MINOR,
+    COFFER_MAGIC_MAJOR,
+    COFFER_STEALTH_MINOR,
+    COFFER_STEALTH_MAJOR,
+    COFFER_JEWELRY_MINOR,
+    COFFER_JEWELRY_MAJOR,
+    COFFER_AUX_MINOR,
+    COFFER_AUX_MAJOR,
+    NUM_COFFER,
+};
+
 enum talisman_type
 {
     TALISMAN_QUILL,

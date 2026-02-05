@@ -365,6 +365,7 @@ static void _add_fake_item(object_class_type base, int sub,
         selected.emplace_back(0, 2, ptmp);
 }
 
+// Daniel - LOW check item knowledge should deal with vaults too
 void check_item_knowledge(bool unknown_items)
 {
     // TODO: refactor most of this into the menu class...

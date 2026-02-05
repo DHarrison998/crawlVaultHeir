@@ -905,7 +905,7 @@ static int Food_index[NUM_FOODS];
 static const food_def Food_prop[] =
 {
     { FOOD_RATION,       "buggy ration", 3400,  1900,  1900 },
-    { FOOD_CHUNK,        "buggy chunk",        1000,  1300,     0 },
+    { FOOD_CHUNK,        "buggy chunk",  1000,  1300,     0 },
     { FOOD_UNUSED,       "buggy pizza",     0,     0,     0 },
     { FOOD_ROYAL_JELLY,  "buggy jelly",  2000,  2000,  2000 },
     { FOOD_BREAD_RATION, "buggy ration", 4400,     0,  5900 },
@@ -2068,6 +2068,7 @@ ac_type staff_ac_check(stave_type s)
     return Staff_prop[Staff_index[s]].ac_check;
 }
 
+// Daniel - Done, I think. High, need to map vaults to item skills
 bool item_skills(const item_def &item, set<skill_type> &skills)
 {
     if (is_useless_item(item))
@@ -2111,12 +2112,22 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     if (item.base_type == OBJ_TALISMANS || item.base_type == OBJ_BAUBLES)
         skills.insert(SK_SHAPESHIFTING);
 
+    if (item.base_type == OBJ_COFFERS)
+    {
+        vector<skill_type> coffer_skills = get_coffer_skills((coffer_type)item.sub_type);
+        for (unsigned int i = 0; i < coffer_skills.size(); ++i)
+        {
+            skills.insert(coffer_skills[i]);
+        }
+    }
+
     // Artefacts with evokable abilities, wands and similar unwielded
     // evokers allow training. Talismans usually don't use evo (unless it's
     // an artefact with, say, +Blink).
     if (item_ever_evokable(item) && !item.is_type(OBJ_MISCELLANY, MISC_ZIGGURAT)
                                  && item.base_type != OBJ_TALISMANS
                                  && item.base_type != OBJ_BAUBLES
+                                 && item.base_type != OBJ_COFFERS
         || gives_ability(item)
         || _orb_uses_evocations(item)
         || _staff_uses_evocations(item))
@@ -3160,6 +3171,27 @@ bool is_mana_regen_item(const item_def& item)
             || item.is_type(OBJ_JEWELLERY, AMU_CHEMISTRY);
 }
 
+// Daniel - Done. High, make name mapping.
+string coffer_type_name(int sub_type)
+{
+    switch (sub_type)
+    {
+    case COFFER_WEAPON_MINOR:   return "small weapon vault";
+    case COFFER_WEAPON_MAJOR:   return "large weapon vault";
+    case COFFER_ARMOR_MINOR:    return "small armor vault";
+    case COFFER_ARMOR_MAJOR:    return "large armor vault";
+    case COFFER_MAGIC_MINOR:    return "small magic vault";
+    case COFFER_MAGIC_MAJOR:    return "large magic vault";
+    case COFFER_STEALTH_MINOR:  return "small stealth vault";
+    case COFFER_STEALTH_MAJOR:  return "large stealth vault";
+    case COFFER_JEWELRY_MINOR:  return "small jewelry vault";
+    case COFFER_JEWELRY_MAJOR:  return "large jewelry vault";
+    case COFFER_AUX_MINOR:      return "small aux vault";
+    case COFFER_AUX_MAJOR:      return "large aux vault";
+    default: return "buggy coffer";
+    }
+}
+
 string talisman_type_name(int type)
 {
     switch (type)
@@ -3261,6 +3293,8 @@ string item_base_name(object_class_type type, int sub_type)
         return jewellery_is_amulet(sub_type) ? "amulet" : "ring";
     case OBJ_TALISMANS:
         return talisman_type_name(sub_type);
+    case OBJ_COFFERS:
+        return coffer_type_name(sub_type);
     default:
         return "";
     }
@@ -3313,6 +3347,8 @@ void seen_item(item_def &item)
             you.seen_misc.set(item.sub_type);
         if (item.base_type == OBJ_TALISMANS)
             you.seen_talisman.set(item.sub_type);
+        if (item.base_type == OBJ_COFFERS)
+            you.seen_coffer.set(item.sub_type);
     }
 
     _maybe_note_found_unrand(item);

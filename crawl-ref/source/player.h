@@ -326,6 +326,7 @@ public:
     FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
     FixedBitVector<NUM_MISCELLANY>     seen_misc;
     FixedBitVector<NUM_TALISMANS>      seen_talisman;
+    FixedBitVector<NUM_COFFER>        seen_coffer;
 
     uint8_t normal_vision;        // how far the species gets to see
     uint8_t current_vision;       // current sight radius (cells)

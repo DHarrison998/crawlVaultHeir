@@ -3336,6 +3336,7 @@ static bool _item_different_than_inv(const item_def& pickup_item,
                    });
 }
 
+// Daniel - Low interesting explore picukp should know about vaults
 static bool _interesting_explore_pickup(const item_def& item)
 {
     if (!(Options.explore_stop & ES_GREEDY_PICKUP_MASK))
@@ -3606,6 +3607,7 @@ int item_on_floor(const item_def &item, const coord_def& where)
     return NON_ITEM;
 }
 
+// Daniel - Mid get max subtype seems like it'll need an entry for vaults
 int get_max_subtype(object_class_type base_type)
 {
     static int max_subtype[] =
@@ -3632,8 +3634,9 @@ int get_max_subtype(object_class_type base_type)
         NUM_RUNE_TYPES,
         NUM_TALISMANS,
         NUM_GEM_TYPES,
-        1,
-        1,
+        1, // Gizmos
+        1, // Baulbles
+        NUM_COFFER,
     };
     COMPILE_CHECK(ARRAYSZ(max_subtype) == NUM_OBJECT_CLASSES);
 
@@ -4196,6 +4199,9 @@ static colour_t _zigfig_colour()
            zigs >=  1 ? ETC_SHIMMER_BLUE :
                         ETC_BONE;
 }
+
+// Daniel - Mid vaults will need a get colour func
+
 /**
  * Assuming this item is a talisman, what colour is it?
  */
@@ -4402,7 +4408,7 @@ colour_t item_def::get_colour() const
             return corpse_colour();
         case OBJ_MISCELLANY:
             return miscellany_colour();
-        case OBJ_TALISMANS:
+        case OBJ_TALISMANS: // Daniel - Mid call vault color func here
             return talisman_colour();
         case OBJ_GOLD:
             return YELLOW;

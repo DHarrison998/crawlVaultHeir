@@ -1,0 +1,25 @@
+enum: JOB_HEIR
+name: "Heir"
+category: Adventurer
+category_priority: 1
+str: 4
+int: 4
+dex: 4
+equipment:
+  - "robe"
+  - "protean talisman"
+  - "Small Weapon Vault"
+  - "scroll of acquirement"
+weapon_choice: good
+recommended_species:
+  - naga
+  - merfolk
+  - demigod
+  - demonspawn
+  - deep elf
+  - human
+skills:
+  fighting: 1
+  dodging: 1
+  stealth: 1
+create_enum: false

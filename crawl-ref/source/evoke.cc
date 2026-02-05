@@ -78,6 +78,8 @@
 
 #define PHIAL_RANGE 5
 
+// Daniel - Question, do I put the code for using vaults in evoke.cc?
+
 static bool _evoke_horn_of_geryon()
 {
     if (!player_summon_check(MONS_SIN_BEAST))
@@ -994,6 +996,7 @@ static bool _evoke_ally_only(const item_def &item, bool ident)
     return false;
 }
 
+// Daniel - mid, reason you can't evoke a vault goes here
 string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
 {
     // id is not at issue here
@@ -1083,6 +1086,7 @@ bool item_ever_evokable(const item_def &item)
     return cannot_evoke_item_reason(&item, false).empty();
 }
 
+// Daniel - Mid If we evoke vaults we can handle that here
 bool evoke_item(item_def& item, dist *preselect)
 {
     if (!item_currently_evokable(&item))

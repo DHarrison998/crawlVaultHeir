@@ -62,6 +62,13 @@ bool warn_about_changing_gear(const vector<item_def*>& to_remove,
 void do_equipment_change(item_def* to_equip, equipment_slot equip_slot,
                          vector<item_def*> to_remove);
 
+string coffer_skill_string(coffer_type type);
+skill_type get_highest_skill_from_group(vector<skill_type> skills);
+vector<skill_type> get_coffer_skills(coffer_type type);
+int get_coffer_skill_requirement(coffer_type type);
+bool coffer_skill_met(coffer_type type);
+bool use_coffer_vault(item_def& coffer);
+
 string cannot_put_on_talisman_reason(const item_def& talisman, bool temp = true);
 bool use_talisman(item_def& talisman);
 

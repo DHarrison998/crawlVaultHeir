@@ -10,7 +10,7 @@
 # <<3>>      Multi
 #
 ###############################################################################
-
+# Daniel - Low, would it be cool to make a minivault centered around vault shops?
 lua {{
 crawl_require('dlua/vault.lua')
 

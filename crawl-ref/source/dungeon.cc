@@ -791,6 +791,7 @@ void dgn_reset_player_data()
     you.seen_armour.init(0);
     you.seen_misc.reset();
     you.seen_talisman.reset();
+    you.seen_coffer.reset();
 }
 
 static void _dgn_load_colour_grid()
@@ -5035,6 +5036,7 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
     return true;
 }
 
+// Daniel - Mid, vaults might be superb items which get weighted here
 static object_class_type _superb_object_class()
 {
     return random_choose_weighted(
@@ -6450,6 +6452,7 @@ void place_spec_shop(const coord_def& where, shop_spec &spec, int shop_level)
         _stock_shop_item(j, shop.type, stocked, supplied, spec, shop, shop_level);
 }
 
+// Daniel - low, vaults here to get them into shops, if we even want that?
 object_class_type item_in_shop(shop_type shop_type)
 {
     switch (shop_type)

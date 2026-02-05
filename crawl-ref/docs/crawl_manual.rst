@@ -2081,6 +2081,8 @@ Artificers
   help them through the early Dungeon. Wands have a limited number of uses,
   though, so they'll want to upgrade from their club ASAP.
 
+Daniel - Low, add description here
+
 Shapeshifters
   Shapeshifters use talismans to shift their body into different forms,
   granting them uncanny power but making them unable to use some items.

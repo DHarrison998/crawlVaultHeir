@@ -113,6 +113,7 @@ static string _describe_weapon_brand(const item_def &item);
 struct property_descriptor;
 static const property_descriptor & _get_artp_desc_data(artefact_prop_type p);
 
+static string _describe_coffer(const item_def &item, bool verbose);
 static string _describe_talisman(const item_def &item, bool verbose);
 static string _describe_talisman_form(transformation form_type);
 
@@ -1225,6 +1226,7 @@ static string _describe_mutant_beast(const monster_info &mi)
            + " " + _describe_mutant_beast_tier(tier);
 }
 
+// Daniel - Mid, definitely add vault logic here for training targets
 /**
  * Is the item associated with some specific training goal?  (E.g. mindelay)
  *
@@ -1250,6 +1252,7 @@ static int _item_training_target(const item_def &item)
     return 0;
 }
 
+// Daniel - mid, definitely add vault here for training skill mapping
 /**
  * Does an item improve with training some skill?
  *
@@ -1272,6 +1275,7 @@ static skill_type _item_training_skill(const item_def &item)
     return SK_NONE;
 }
 
+// Daniel - Mid, definitely add vault here for training skill detection
 /**
  * Return whether the character is below a plausible training target for an
  * item.
@@ -1296,7 +1300,7 @@ static bool _is_below_training_target(const item_def &item, bool ignore_current)
        && (ignore_current || you.get_training_target(skill) < target);
 }
 
-
+// Daniel - Mid, add vault here for "your skill" line, which will be complex for vaults
 /**
  * Produce the "Your skill:" line for item descriptions where specific skill targets
  * are relevant (weapons, missiles)
@@ -2663,6 +2667,7 @@ static void _uselessness_desc(ostringstream &description, const item_def &item)
     }
 }
 
+// Daniel - Done. High, hook up description func for vaults here
 /**
  * Describe a specified item.
  *
@@ -2966,6 +2971,10 @@ string get_item_description(const item_def &item,
             need_extra_line = false;
         else
             description << desc;
+        break;
+
+    case OBJ_COFFERS:
+        description << _describe_coffer(item, verbose);
         break;
 
     case OBJ_GIZMOS:
@@ -7701,6 +7710,15 @@ static string _describe_talisman(const item_def &item, bool verbose)
         }
     }
 
+    return description.str();
+}
+
+// Daniel - Temp, half done. high, add func to describe the vault. See this and next func.
+static string _describe_coffer(const item_def &item, bool verbose)
+{
+    ostringstream description;
+    
+    description << "Coffer Test";
     return description.str();
 }
 

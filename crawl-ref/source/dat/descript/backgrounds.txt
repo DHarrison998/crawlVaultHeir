@@ -2,7 +2,7 @@
 Air Elementalist
 
 Air Elementalists have learned the Shock spell. Their electrical magic can harm
-groups of foes, while their air spells assist in fighting or fleeing enemies.
+groups of foes, while their air spells assist in fighting or fleeing enemies. Daniel - High, add description for new job to this file.
 %%%%
 Artificer
 

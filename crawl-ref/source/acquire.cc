@@ -728,6 +728,7 @@ static int _acquirement_talisman_subtype(int & /*quantity*/,
     return talisman;
 }
 
+// Daniel - Done? Decided no. mid, decide and then implement whether we can acquire vaults
 typedef int (*acquirement_subtype_finder)(int &quantity, int agent);
 static const acquirement_subtype_finder _subtype_finders[] =
 {
@@ -755,6 +756,7 @@ static const acquirement_subtype_finder _subtype_finders[] =
     0, // no gems either
     0, // no gizmos (handled elsewhere)
     0, // no baubles
+    0, // no coffers
 };
 
 static int _find_acquirement_subtype(object_class_type &class_wanted,

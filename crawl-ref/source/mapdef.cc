@@ -5851,6 +5851,8 @@ void item_list::parse_random_by_class(string c, item_spec &spec)
         return;
     }
 
+    // Daniel - Low, add logic here for random item selection of vault type
+
     error = make_stringf("Bad item class: '%s'", c.c_str());
 }
 

@@ -170,6 +170,6 @@ private:
     colour_t potion_colour() const;
     colour_t book_colour() const;
     colour_t miscellany_colour() const;
-    colour_t talisman_colour() const;
+    colour_t talisman_colour() const; // Daniel - for adding colour to header
     colour_t corpse_colour() const;
 };

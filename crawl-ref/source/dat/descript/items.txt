@@ -4,7 +4,7 @@ acid dragon scales
 The scales of an acid dragon. Although it does not provide its wearer with as
 much protection as the armour made from the scales of some larger dragons, it is
 somewhat lighter and less encumbering. It is also remarkably smooth, letting
-corrosive slime flow off it like water.
+corrosive slime flow off it like water. 
 %%%%
 amulet of chemistry
 
@@ -1179,6 +1179,78 @@ prismatic gem
 
 Shining with every colour of the rainbow and a few others besides, some
 consider this gem 'a bit tacky'. Preposterous!
+%%%%
+Small Weapon Vault
+
+A sealed box small enough to fit in a child's palm, yet brimming with the promise of more. It holds an ancient treasure inside, though only the worth may open it to receive their prize.
+
+(If any weapon skill is at least 6, attempting to use this will transform it into a weapon worthy of your skill.)
+%%%%
+Large Weapon Vault
+
+A sealed box small enough to fit in a child's palm, yet brimming with the promise of more. It holds an ancient treasure inside, though only the worth may open it to receive their prize.
+
+(If any weapon skill is at least 10, attempting to use this will transform it into a weapon worthy of your skill.)
+%%%%
+Small Armor Vault
+
+A sealed box small enough to fit in a child's palm, yet brimming with the promise of more. It holds an ancient treasure inside, though only the worth may open it to receive their prize.
+
+(If your armor or shields skill is at least 6, attempting to use this will transform it into armor worthy of your skill.)
+%%%%
+Large Armor Vault
+
+A sealed box small enough to fit in a child's palm, yet brimming with the promise of more. It holds an ancient treasure inside, though only the worth may open it to receive their prize.
+
+(If your armor or shields skill is at least 10, attempting to use this will transform it into armor worthy of your skill.)
+%%%%
+Small Magic Vault
+
+A sealed box small enough to fit in a child's palm, yet brimming with the promise of more. It holds an ancient treasure inside, though only the worth may open it to receive their prize.
+
+(If your spellcasting skill is at least 6, attempting to use this will transform it into a magic enhancing accessory worthy of your skill.)
+%%%%
+Large Magic Vault
+
+A sealed box small enough to fit in a child's palm, yet brimming with the promise of more. It holds an ancient treasure inside, though only the worth may open it to receive their prize.
+
+(If your skill in a school of magic is at least 10, attempting to use this will transform it into a magical staff worthy of your skill.)
+%%%%
+Small Stealth Vault
+
+A sealed box small enough to fit in a child's palm, yet brimming with the promise of more. It holds an ancient treasure inside, though only the worth may open it to receive their prize.
+
+(If your stealth skill is at least 6, attempting to use this will transform it into shadowy gear worthy of your skill.)
+%%%%
+Large Stealth Vault
+
+A sealed box small enough to fit in a child's palm, yet brimming with the promise of more. It holds an ancient treasure inside, though only the worth may open it to receive their prize.
+
+(If your stealth skill is at least 10, attempting to use this will transform it into a deadly blade worthy of your skill.)
+%%%%
+Small Jewelry Vault
+
+A sealed box small enough to fit in a child's palm, yet brimming with the promise of more. It holds an ancient treasure inside, though only the worth may open it to receive their prize.
+
+(If your dodging skill is at least 6, attempting to use this will transform it into a ring worthy of your skill.)
+%%%%
+Large Jewelry Vault
+
+A sealed box small enough to fit in a child's palm, yet brimming with the promise of more. It holds an ancient treasure inside, though only the worth may open it to receive their prize.
+
+(If your dodging skill is at least 10, attempting to use this will transform it into an amulet worthy of your skill.)
+%%%%
+Small Aux Vault
+
+A sealed box small enough to fit in a child's palm, yet brimming with the promise of more. It holds an ancient treasure inside, though only the worth may open it to receive their prize.
+
+(If your fighting or unarmed skill is at least 6, attempting to use this will transform it into a piece of auxillary armor worthy of your skill.)
+%%%%
+Large Aux Vault
+
+A sealed box small enough to fit in a child's palm, yet brimming with the promise of more. It holds an ancient treasure inside, though only the worth may open it to receive their prize.
+
+(If your fighting or unarmed skill is at least 10, attempting to use this will transform it into a piece of auxillary armor worthy of your skill.)
 %%%%
 protean talisman
 
