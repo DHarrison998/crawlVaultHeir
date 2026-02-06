@@ -1252,7 +1252,7 @@ static int _item_training_target(const item_def &item)
     return 0;
 }
 
-// Daniel - mid, definitely add vault here for training skill mapping
+// Daniel - Done. mid, definitely add vault here for training skill mapping
 /**
  * Does an item improve with training some skill?
  *
@@ -1270,6 +1270,8 @@ static skill_type _item_training_skill(const item_def &item)
         return SK_THROWING;
     if (item.base_type == OBJ_TALISMANS || item.base_type == OBJ_BAUBLES)
         return SK_SHAPESHIFTING;
+    if (item.base_type == OBJ_COFFERS)
+        return SK_NONE; // Daniel - low, has to be worked back to it's source somehow to multi-set skills. Check out what item_attack_skill does with lochbar. 
     if (item_ever_evokable(item)) // not very accurate
         return SK_EVOCATIONS;
     return SK_NONE;
@@ -2609,6 +2611,7 @@ static string _cannot_use_reason(const item_def &item, bool temp=true)
     case OBJ_SCROLLS: return cannot_read_item_reason(&item, temp);
     case OBJ_POTIONS: return cannot_drink_item_reason(&item, temp);
     case OBJ_BAUBLES:
+    case OBJ_COFFERS:
     case OBJ_MISCELLANY:
     case OBJ_WANDS:   return cannot_evoke_item_reason(&item, temp);
     default: return "";

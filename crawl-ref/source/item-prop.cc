@@ -3176,18 +3176,18 @@ string coffer_type_name(int sub_type)
 {
     switch (sub_type)
     {
-    case COFFER_WEAPON_MINOR:   return "small weapon vault";
-    case COFFER_WEAPON_MAJOR:   return "large weapon vault";
-    case COFFER_ARMOR_MINOR:    return "small armor vault";
-    case COFFER_ARMOR_MAJOR:    return "large armor vault";
-    case COFFER_MAGIC_MINOR:    return "small magic vault";
-    case COFFER_MAGIC_MAJOR:    return "large magic vault";
-    case COFFER_STEALTH_MINOR:  return "small stealth vault";
-    case COFFER_STEALTH_MAJOR:  return "large stealth vault";
-    case COFFER_JEWELRY_MINOR:  return "small jewelry vault";
-    case COFFER_JEWELRY_MAJOR:  return "large jewelry vault";
-    case COFFER_AUX_MINOR:      return "small aux vault";
-    case COFFER_AUX_MAJOR:      return "large aux vault";
+    case COFFER_WEAPON_MINOR:   return "small weapon coffer";
+    case COFFER_WEAPON_MAJOR:   return "large weapon coffer";
+    case COFFER_ARMOR_MINOR:    return "small armor coffer";
+    case COFFER_ARMOR_MAJOR:    return "large armor coffer";
+    case COFFER_MAGIC_MINOR:    return "small magic coffer";
+    case COFFER_MAGIC_MAJOR:    return "large magic coffer";
+    case COFFER_STEALTH_MINOR:  return "small stealth coffer";
+    case COFFER_STEALTH_MAJOR:  return "large stealth coffer";
+    case COFFER_JEWELRY_MINOR:  return "small jewelry coffer";
+    case COFFER_JEWELRY_MAJOR:  return "large jewelry coffer";
+    case COFFER_AUX_MINOR:      return "small aux coffer";
+    case COFFER_AUX_MAJOR:      return "large aux coffer";
     default: return "buggy coffer";
     }
 }

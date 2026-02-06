@@ -3494,14 +3494,20 @@ bool coffer_skill_met(coffer_type type)
     vector<skill_type> skills = get_coffer_skills(type);
     bool skill_met = false;
     int skill_requirement = get_coffer_skill_requirement(type);
+    mprf("test:coffer_skill_met :: requirement=%d\n", skill_requirement);
     for (int i = 0; i < static_cast<int>(skills.size()); ++i)
     {
+        mprf("skill #%d %s at %d | %s", i, skill_name(skills[i]), you.skill(skills[i]),
+            i%2==0 ? "" : "\n");
         if (you.skill(skills[i]) >= skill_requirement)
         {
             skill_met = true;
             break;
         }
     }
+    mprf("\n");
+    mprf("test: coffer_skill_met? :: met = %s\n\n", skill_met ? "true" : "false");
+    
     return skill_met;
 }
 
@@ -3510,14 +3516,14 @@ bool use_coffer_vault(item_def& coffer)
     if (! (coffer_skill_met((coffer_type)coffer.sub_type)))
         return false;
 
-    item_def& real_item = you.inv[_get_item_slot_maybe_with_move(coffer)];
+    item_def& coffer_item = you.inv[_get_item_slot_maybe_with_move(coffer)];
     
     vector<unrand_type> short_blade = {
         UNRAND_SPRIGGANS_KNIFE,             // Spriggan's Knife
         UNRAND_ARC_BLADE,                   // arc blade
         UNRAND_CAPTAIN,                     // captain's cutlass
         UNRAND_GYRE,                        // pair of quick blades "Gyre" and "Gimble"
-        UNRAND_VAMPIRES_TOOTH              // Vampire's Tooth
+        UNRAND_VAMPIRES_TOOTH               // Vampire's Tooth
     };
     vector<unrand_type> long_blade = {
         UNRAND_THROATCUTTER,                // Throatcutter
@@ -3675,22 +3681,19 @@ bool use_coffer_vault(item_def& coffer)
         UNRAND_VITALITY,                    // amulet of Vitality
         UNRAND_ELEMENTAL_VULNERABILITY,     // amulet of Elemental Vulnerability
         UNRAND_MAGE,                        // ring of the Mage
-        // UNRAND_VICTORY,                     // toga "Victory"
-        // UNRAND_FOLLY,                       // robe of Folly
-        // UNRAND_AUGMENTATION,                // robe of Augmentation
+        UNRAND_VICTORY,                     // toga "Victory"
+        UNRAND_FOLLY,                       // robe of Folly
+        UNRAND_AUGMENTATION,                // robe of Augmentation
     };
     vector<unrand_type> choices;
-    object_class_type type;
-    
-    // type = OBJ_WEAPONS;
-    // type = OBJ_ARMOUR;
-    // type = OBJ_JEWELLERY;
-    // type = OBJ_BOOKS;
-    // type = OBJ_STAVES;
-    // type = OBJ_ORBS;
-    switch (real_item.sub_type)
+    switch (coffer_item.sub_type)
     {
-    case COFFER_WEAPON_MINOR:
+    case COFFER_WEAPON_MINOR: 
+        // Daniel - Question, what should the difference be between minor and major weapon coffers? 
+        // Should I separate out easy vs. hard to use weapons? 
+        // Should the minor one be a random weapon and the major one be a weapon you have high skill in?
+        // Could separate into 1 vs. 2 handed
+        // Could separate into low vs. high power items
         choices = random_choose(
             short_blade,
             long_blade,
@@ -3699,7 +3702,6 @@ bool use_coffer_vault(item_def& coffer)
             mace_and_whip,
             ranged
         );
-        type = OBJ_WEAPONS;
         break;
     case COFFER_WEAPON_MAJOR:
         choices = random_choose(
@@ -3710,81 +3712,84 @@ bool use_coffer_vault(item_def& coffer)
             mace_and_whip,
             ranged
         );
-        type = OBJ_WEAPONS;
         break;
     case COFFER_ARMOR_MINOR:
         choices = shield;
-        type = OBJ_ARMOUR;
         break;
     case COFFER_ARMOR_MAJOR:
+        // Daniel - Mid, make sure barding is only picked if "you" can wear barding.
         choices = random_choose(armor, barding);
-        type = OBJ_ARMOUR;
         break;
     case COFFER_MAGIC_MINOR:
         choices = magic;
-        type = OBJ_JEWELLERY;
-        // type = OBJ_ARMOUR;
         break;
     case COFFER_MAGIC_MAJOR:
         choices = staff;
-        type = OBJ_STAVES;
         break;
     case COFFER_STEALTH_MINOR:
         choices = stealth;
-        type = OBJ_ARMOUR;
         break;
     case COFFER_STEALTH_MAJOR:
-        // choices = stealth;
-        // type = OBJ_ARMOUR;
-        // choices = random_choose(stealth, short_blade);
         choices = short_blade;
-        type = OBJ_WEAPONS;
         break;
     case COFFER_JEWELRY_MINOR:
         choices = ring;
-        type = OBJ_JEWELLERY;
         break;
     case COFFER_JEWELRY_MAJOR:
         choices = random_choose(ring, amulet);
-        type = OBJ_JEWELLERY;
         break;
     case COFFER_AUX_MINOR:
         choices = random_choose(
-            // orb,
+            orb,
             cloak,
             hat,
             glove,
             boot
         );
-        // type = OBJ_ORBS;
-        type = OBJ_ARMOUR;
         break;
-    case COFFER_AUX_MAJOR:
+    case COFFER_AUX_MAJOR: 
+        // Daniel - Question, should the major aux give 2 things? Or offer different things? Or kill one of the options?
         choices = random_choose(
-            // orb,
+            orb,
             cloak,
             hat,
             glove,
             boot
         );
-        // type = OBJ_ORBS;
-        type = OBJ_ARMOUR;
         break;
     default:
         choices = glove;
-        type = OBJ_ARMOUR;
         break;
     }
+
+    vector<unrand_type> final_choices;
+    for (unsigned int i = 0; i < choices.size(); ++i)
+    {
+        unique_item_status_type status = get_unique_item_status(choices[i]);
+        if (status == UNIQ_NOT_EXISTS)
+            final_choices.push_back(choices[i]);
+    }
+    if (final_choices.size() == 0)
+    {
+        mprf("The coffer in your hands struggles to open.");
+        return false;
+    }
+
+    mprf("test: use_coffer_vault :: initial pool=%d, real pool=%d\n", choices.size(), final_choices.size());
+    unrand_type choice = final_choices[random2(choices.size())];
+    // Specifying unrand_type as a negative force_ego makes that unrand get made.
+    int unrand_item = items(true, OBJ_RANDOM, OBJ_RANDOM, 50, -choice);
+    mprf("test: unrand_type = %d\n", choice);
     
-    unrand_type choice = choices[random2(choices.size())];
+    item_def &item(env.item[unrand_item]);
+    item.pos = you.pos();
+    mprf("test: base_type = %d-%s, sub_type = %d-%s\n\n", item.base_type, base_type_string(item), 
+        item.sub_type, sub_type_string(item));
     
-    
-    real_item.base_type = type;
-    real_item.sub_type = choice;
-    seen_item(real_item);
+    _move_item_from_floor_to_inv(item);
+    destroy_item(coffer_item, true); 
+
     return true;
-    // (copy_item_to_grid(item, you.pos()) != NON_ITEM)
-    // DANIEL - Done. High Here is where we must do the vault transform stuff!
 }
 
 string cannot_put_on_talisman_reason(const item_def& talisman, bool temp)
@@ -3932,8 +3937,10 @@ void tile_item_use(int idx)
     // Equipped?
     const bool equipped = item_is_equipped(item);
 
+    // mprf("test:tele_item_use :: ");
     if (item_ever_evokable(item))
     {
+        // mprf("test:tele_item_use evokable");
         if (check_warning_inscriptions(item, OPER_EVOKE))
             evoke_item(item);
         return;

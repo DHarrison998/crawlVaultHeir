@@ -1260,6 +1260,7 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
     return selected;
 }
 
+// Daniel - Question, found this, do I need to add to it?
 bool item_is_selected(const item_def &i, int selector)
 {
     const object_class_type itype = i.base_type;
@@ -1296,6 +1297,7 @@ bool item_is_selected(const item_def &i, int selector)
         return is_melee_weapon(i) && is_artefact(i);
 
     case OSEL_EVOKABLE:
+        mprf("test:item_is_selected");
         return item_ever_evokable(i);
 
     case OSEL_ENCHANTABLE_ARMOUR:

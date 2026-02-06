@@ -92,6 +92,7 @@ void wizard_create_spec_object_by_name()
     id_floor_items();
 }
 
+// Daniel - Low, add coffers as a wizard item gen category
 void wizard_create_spec_object()
 {
     string title = "Which item class (ESC to exit)?";

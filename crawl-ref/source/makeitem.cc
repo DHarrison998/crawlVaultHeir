@@ -1815,7 +1815,6 @@ static void _roll_talisman_type(item_def &item, int lvl)
     }
 }
 
-// Daniel - Late, make this too
 static void _generate_talisman_item(item_def& item, int force_type, int item_level)
 {
     const int lvl = _talisman_level(item_level);
@@ -1877,6 +1876,13 @@ static void _generate_misc_item(item_def& item, int force_type, int item_level)
         return;
     }
     item.sub_type = typ;
+}
+
+// Daniel - Done. Late, make this too
+static void _generate_coffer_item(item_def& item, int force_type, int item_level)
+{
+    item.base_type = OBJ_COFFERS;
+    item.sub_type = force_type;
 }
 
 /**
@@ -2183,6 +2189,10 @@ int items(bool allow_uniques,
         item.base_type = OBJ_BAUBLES;
         item.sub_type = BAUBLE_FLUX;
         item.quantity = random_range(2, 3);
+        break;
+
+    case OBJ_COFFERS: // Daniel - Done. Highest, this is what is needed to make the item not be gold!
+        _generate_coffer_item(item, force_type, item_level);
         break;
 
     // that is, everything turns to gold if not enumerated above, so ... {dlb}

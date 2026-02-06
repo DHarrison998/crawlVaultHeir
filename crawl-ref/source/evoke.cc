@@ -35,6 +35,7 @@
 #include "invent.h"
 #include "item-prop.h"
 #include "items.h"
+#include "item-use.h"
 #include "level-state-type.h"
 #include "libutil.h"
 #include "losglobal.h"
@@ -996,7 +997,7 @@ static bool _evoke_ally_only(const item_def &item, bool ident)
     return false;
 }
 
-// Daniel - mid, reason you can't evoke a vault goes here
+// Daniel - Done. mid, reason you can't evoke a vault goes here
 string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
 {
     // id is not at issue here
@@ -1016,6 +1017,14 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
         // override sac artifice for zigfigs, including a general check
         // TODO: zigfig has some terrain/level constraints that aren't handled
         // here
+        return "";
+    }
+
+    if (item->base_type == OBJ_COFFERS)
+    {
+        mprf("test:cannot_evoke_item_reason");
+        if (! coffer_skill_met((coffer_type)item->sub_type) && temp)
+            return "You aren't skilled enough to open this coffer.";
         return "";
     }
 
@@ -1086,7 +1095,7 @@ bool item_ever_evokable(const item_def &item)
     return cannot_evoke_item_reason(&item, false).empty();
 }
 
-// Daniel - Mid If we evoke vaults we can handle that here
+// Daniel - Done. Mid If we evoke vaults we can handle that here
 bool evoke_item(item_def& item, dist *preselect)
 {
     if (!item_currently_evokable(&item))
@@ -1109,6 +1118,10 @@ bool evoke_item(item_def& item, dist *preselect)
         dec_inv_item_quantity(item.link, 1);
         transform(0, transformation::flux);
         you.props[FLUX_ENERGY_KEY] = 45;
+        return true;
+
+    case OBJ_COFFERS:
+        use_coffer_vault(item);
         return true;
 
     case OBJ_MISCELLANY:

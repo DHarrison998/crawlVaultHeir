@@ -3607,7 +3607,7 @@ int item_on_floor(const item_def &item, const coord_def& where)
     return NON_ITEM;
 }
 
-// Daniel - Mid get max subtype seems like it'll need an entry for vaults
+// Daniel - Done. Mid get max subtype seems like it'll need an entry for vaults
 int get_max_subtype(object_class_type base_type)
 {
     static int max_subtype[] =
