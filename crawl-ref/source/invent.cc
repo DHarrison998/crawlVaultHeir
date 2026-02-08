@@ -1260,7 +1260,7 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
     return selected;
 }
 
-// Daniel - Question, found this, do I need to add to it?
+// Daniel - Done. Question, found this, do I need to add to it?
 bool item_is_selected(const item_def &i, int selector)
 {
     const object_class_type itype = i.base_type;
@@ -1367,7 +1367,8 @@ bool item_is_selected(const item_def &i, int selector)
     case OSEL_EVOKABLE_ALL:
         return i.base_type == OBJ_WANDS
                || i.base_type == OBJ_MISCELLANY
-               || i.base_type == OBJ_BAUBLES;
+               || i.base_type == OBJ_BAUBLES
+               || i.base_type == OBJ_COFFERS;
 
     default:
         return false;

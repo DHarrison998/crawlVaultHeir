@@ -7,6 +7,7 @@ int: 4
 dex: 4
 equipment:
   - "robe"
+  - "potion of curing"
 weapon_choice: bundle
 recommended_species:
   - naga
