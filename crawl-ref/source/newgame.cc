@@ -1894,10 +1894,10 @@ static bool _prompt_bundle_choice(const newgame_def& ng, newgame_def& ng_choice,
                 ng_choice.bundle = defOption; // Daniel - Low, implement viable bundle choice
                 break;
             case M_RANDOM:
-                ng_choice.bundle = defOption; // Daniel - Low, implement random bundle choice
+                ng_choice.bundle = options[random2(options.size())]; // Daniel - Done. Low, implement random bundle choice
                 break;
             default:
-                ng_choice.bundle = defOption;
+                ng_choice.bundle = options[id];
                 break;
         }
         return ret = done = true;
