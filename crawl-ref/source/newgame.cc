@@ -25,6 +25,7 @@
 #include "menu.h"
 #include "ng-input.h"
 #include "ng-restr.h"
+#include "object-class-type.h"
 #include "options.h"
 #include "playable.h"
 #include "prompt.h"
@@ -49,6 +50,8 @@ using namespace ui;
 static void _choose_gamemode_map(newgame_def& ng, newgame_def& ng_choice,
                                  const newgame_def& defaults);
 static bool _choose_weapon(newgame_def& ng, newgame_def& ng_choice,
+                          const newgame_def& defaults);
+static bool _choose_bundle(newgame_def& ng, newgame_def& ng_choice,
                           const newgame_def& defaults);
 static void _mark_fully_random(newgame_def& ng, newgame_def& ng_choice,
                                bool viable);
@@ -83,6 +86,7 @@ void newgame_def::clear_character()
     species  = SP_UNKNOWN;
     job      = JOB_UNKNOWN;
     weapon   = WPN_UNKNOWN;
+    // bundle.clear(); // Daniel - Warning, probably need to do this.
 }
 
 enum MenuOptions
@@ -516,6 +520,10 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
             ng = ng_reset;
             continue;
         }
+
+// DANIEL, you left off here, testing if this is where the crash on clicking Inheritor 
+// is coming from. Seems like yes. Dive into this next time.
+        _choose_bundle(ng, choice, defaults); 
 
         if (_choose_weapon(ng, choice, defaults))
         {
@@ -1127,11 +1135,11 @@ static job_group jobs_order[] =
     {
         "Adventurer",
         coord_def(1, 0), 20,
-        { JOB_ARTIFICER, JOB_SHAPESHIFTER, JOB_WANDERER, JOB_DELVER, }
+        { JOB_ARTIFICER, JOB_SHAPESHIFTER, JOB_WANDERER, JOB_DELVER, JOB_INHERITOR, }
     },
     {
         "Warrior-mage",
-        coord_def(1, 5), 26,
+        coord_def(1, 6), 26,
         { JOB_WARPER, JOB_HEXSLINGER, JOB_ENCHANTER, JOB_REAVER }
     },
     {
@@ -1664,6 +1672,7 @@ static void _prompt_choice(int choice_type, newgame_def& ng, newgame_def& ng_cho
 
 typedef pair<weapon_type, char_choice_restriction> weap_choice;
 
+
 static weapon_type _fixup_weapon(weapon_type wp,
                                  const vector<weap_choice>& weapons)
 {
@@ -1674,6 +1683,339 @@ static weapon_type _fixup_weapon(weapon_type wp,
             return wp;
     return WPN_UNKNOWN;
 }
+
+// Daniel - High, make sure bundle menu works, replace talisman
+static void _construct_bundle_menu(const newgame_def& ng,
+                                   const int& default_index,
+                                   const vector<item_skill_bundle>& bundles,
+                                   shared_ptr<OuterMenu>& main_items,
+                                   shared_ptr<OuterMenu>& sub_items)
+{
+    struct bundle_menu_item {
+        // vector<skill_type> skills; // Daniel - Alert, removing this might cause issues
+        string label;
+        tileidx_t tile;
+        bundle_menu_item(string _label, tileidx_t _tile)
+            : label(std::move(_label)), tile(std::move(_tile)) {};
+        bundle_menu_item(string _label)
+            : label(std::move(_label)), tile(0) {};
+    };
+    vector<bundle_menu_item> choices;
+
+    for (unsigned int i = 0; i < bundles.size(); ++i)
+    {
+        string label = bundles[i].name;
+        label.append(":\n");
+        
+        for (unsigned int j = 0; j < bundles[i].items.size(); ++j)
+        {
+            label.append(sub_type_string(bundles[i].items[j].first, 
+                bundles[i].items[j].second, true));
+            if (bundles[i].skills.size() > 0) // add comma if skills are after this
+                label.append(", ");
+        }
+        if (0 > bundles[i].items.size())
+            label.append("\n");
+        for (unsigned int j = 0; j < bundles[i].skills.size(); ++j)
+        {
+            label.append(skill_name(bundles[i].skills[j].first));
+            label.append(" +");
+            label.append(std::to_string(bundles[i].skills[j].second));
+            if (bundles[i].skills.size() > (j+1))
+                label.append(", "); // add comma if more skill after this
+        }
+        item_def dummy;
+        dummy.base_type = bundles[i].items[0].first;
+        dummy.sub_type = bundles[i].items[0].second;
+        
+        choices.emplace_back(label
+#ifdef USE_TILE
+            , tileidx_item(dummy)
+#endif
+            );
+    }
+
+    int max_text_width = 0;
+    for (const auto& choice : choices)
+    {
+        max_text_width = max(max_text_width, strwidth(choice.label));
+    }
+
+    for (unsigned int i = 0; i < bundles.size(); ++i)
+    {
+        const auto& choice = choices[i];
+
+        auto hbox = make_shared<Box>(Box::HORZ);
+        hbox->set_cross_alignment(Widget::Align::CENTER);
+        hbox->set_margin_for_sdl(2, 10, 2, 2);
+#ifdef USE_TILE
+        auto tile_stack = make_shared<Stack>();
+        tile_stack->set_margin_for_sdl(0, 6, 0, 0);
+        tile_stack->flex_grow = 0;
+        hbox->add_child(tile_stack);
+
+        tile_stack->add_child(make_shared<Image>(
+                tile_def(choice.tile)));
+#endif
+
+        auto label = make_shared<Text>();
+        hbox->add_child(label);
+
+        const char letter = 'a' + i;
+
+        string text = make_stringf(" %c - %s", letter,
+                chop_string(choice.label, max_text_width, true).c_str()
+                );
+
+        const auto fg = WHITE;
+        const auto bg = STARTUP_HIGHLIGHT_GOOD;
+
+        label->set_text(formatted_string(text, fg));
+
+        hbox->set_main_alignment(Widget::Align::STRETCH);
+        // Daniel - Question, should I separate out the list like this instead of
+        // doing my own string formatting as I am now?
+        // string apt_text = make_stringf("(%+d apt)",
+        //         species_apt(choice.skill, ng.species));
+        // auto suffix = make_shared<Text>(formatted_string(apt_text, fg));
+        // hbox->add_child(suffix);
+
+        auto btn = make_shared<MenuButton>();
+        btn->set_child(std::move(hbox));
+        btn->id = i;
+        btn->hotkey = letter;
+        btn->highlight_colour = bg;
+
+        // Is this item our default option?
+        if (i == default_index)
+            main_items->set_initial_focus(btn.get());
+        main_items->add_button(std::move(btn), 0, i);
+    }
+
+    _add_menu_sub_item(sub_items, 0, 0, "+ - Recommended random choice",
+            "Picks a random recommended option", '+', M_VIABLE);
+    _add_menu_sub_item(sub_items, 0, 1, "% - List aptitudes",
+            "Lists the numerical skill train aptitudes for all races", '%',
+            M_APTITUDES);
+    _add_menu_sub_item(sub_items, 0, 2, "? - Help",
+            "Opens the help screen", '?', M_HELP);
+    _add_menu_sub_item(sub_items, 1, 0, "* - Random option",
+            "Picks a random option", '*', M_RANDOM);
+    _add_menu_sub_item(sub_items, 1, 1, "Bksp - Return to character menu",
+            "Lets you return back to Character choice menu", CK_BKSP, M_ABORT);
+
+    if (default_index != 0)
+    {
+        string text = "Tab - ";
+// probably need to remove most of this
+        text += default_index == M_RANDOM  ? "Random" : 
+                //default_index == M_VIABLE  ? "Recommended" :
+                "Default";
+                
+        _add_menu_sub_item(sub_items, 1, 2, text,
+                "Select your old item", '\t', M_DEFAULT_CHOICE);
+    }
+}
+
+// Daniel - High, change heir choice to bundle choice and hook up to bundles instead of talisman
+/**
+ * Returns false if user escapes
+ */
+static bool _prompt_bundle_choice(const newgame_def& ng, newgame_def& ng_choice,
+                           const newgame_def& defaults,
+                           const vector<item_skill_bundle>& options)
+{
+    item_skill_bundle defOption = options[0];
+
+    auto title_hbox = make_shared<Box>(Widget::HORZ);
+#ifdef USE_TILE
+    dolls_data doll;
+    fill_doll_for_newgame(doll, ng);
+#ifdef USE_TILE_LOCAL
+    auto tile = make_shared<ui::PlayerDoll>(doll);
+    tile->set_margin_for_sdl(0, 10, 0, 0);
+    title_hbox->add_child(std::move(tile));
+#endif
+#endif
+    auto title = make_shared<Text>(formatted_string(_welcome(ng), BROWN));
+    title_hbox->add_child(title);
+    title_hbox->set_cross_alignment(Widget::CENTER);
+    title_hbox->set_margin_for_sdl(0, 0, 20, 0);
+    title_hbox->set_margin_for_crt(0, 0, 1, 0);
+
+    auto vbox = make_shared<Box>(Box::VERT);
+    vbox->set_cross_alignment(Widget::Align::STRETCH);
+    vbox->add_child(title_hbox);
+    auto prompt = make_shared<Text>(formatted_string("You have a choice of items.", CYAN));
+    vbox->add_child(prompt);
+
+    auto main_items = make_shared<OuterMenu>(true, 1, options.size());
+    main_items->menu_id = "bundle-main"; // Daniel - Question Alert. is this okay to change from weapon-main?
+    main_items->set_margin_for_sdl(15, 0);
+    main_items->set_margin_for_crt(1, 0);
+    vbox->add_child(main_items);
+
+    auto sub_items = make_shared<OuterMenu>(false, 2, 3);
+    sub_items->menu_id = "bundle-sub"; // Daniel - Question Alert. is this okay to change from weapon-sub?
+    vbox->add_child(sub_items);
+
+    main_items->linked_menus[2] = sub_items;
+    sub_items->linked_menus[0] = main_items;
+
+    // Daniel - Question, should the second argument actually be a more valid option, like random or something, for when fully random characters are being made?
+    _construct_bundle_menu(ng, 0, options, main_items, sub_items);
+
+    bool done = false, ret = false;
+
+    vbox->on_activate_event([&](const ActivateEvent& event) {
+        const auto button = static_pointer_cast<MenuButton>(event.target());
+        const auto id = button->id;
+        switch (id)
+        {
+            case M_ABORT:
+                ret = false;
+                return done = true;
+            case M_APTITUDES:
+                show_help('%', _highlight_pattern(ng));
+                return true;
+            case M_HELP:
+                show_help('?');
+                return true;
+            case M_DEFAULT_CHOICE:
+                // if (defOption != TALISMAN_NONE) // Daniel - Questio Alert, should we be gating for a null choice here?
+                // {
+                    ng_choice.bundle = defOption;
+                    break;
+                // }
+                // No default option defined.
+                // This case should never happen in those cases but just in case
+                return true;
+            case M_VIABLE:
+                ng_choice.bundle = defOption; // Daniel - Low, implement viable bundle choice
+                break;
+            case M_RANDOM:
+                ng_choice.bundle = defOption; // Daniel - Low, implement random bundle choice
+                break;
+            default:
+                ng_choice.bundle = defOption;
+                break;
+        }
+        return ret = done = true;
+    });
+
+    auto popup = make_shared<ui::Popup>(vbox);
+    popup->on_hotkey_event([&](const KeyEvent& ev) {
+        const int lastch = ev.key();
+        if (ui::key_exits_popup(lastch, false)
+            || lastch == ' ')
+        {
+            ret = false;
+            return done = true;
+        }
+        switch (lastch)
+        {
+            case 'X':
+            case CONTROL('Q'):
+#ifdef USE_TILE_WEB
+                tiles.send_exit_reason("cancel");
+#endif
+                end(0);
+                break;
+            default:
+                break;
+        }
+
+        return false;
+    });
+
+#ifdef USE_TILE_WEB
+    tiles.json_open_object();
+    tiles.json_write_string("title", title->get_text().to_colour_string(LIGHTGREY));
+    tiles.json_write_string("prompt", prompt->get_text().to_colour_string(LIGHTGREY));
+    main_items->serialize("main-items");
+    sub_items->serialize("sub-items");
+    tiles.send_doll(doll, false, false);
+    tiles.push_ui_layout("newgame-choice", 1);
+    popup->on_layout_pop([](){ tiles.pop_ui_layout(); });
+#endif
+    ui::run_layout(std::move(popup), done);
+
+    return ret;
+}
+
+static item_skill_bundle bundle_options[] = 
+{
+    {
+        "warrior", 
+        {{OBJ_COFFERS, COFFER_WEAPON_MAJOR}, {OBJ_COFFERS, COFFER_ARMOR_MINOR}}, 
+        {{SK_FIGHTING, 2}, {SK_SHIELDS, 2}}
+    },
+    {
+        "bullwark", 
+        {{OBJ_COFFERS, COFFER_ARMOR_MAJOR}, {OBJ_COFFERS, COFFER_AUX_MINOR}}, 
+        {{SK_FIGHTING, 2}, {SK_ARMOUR, 2}}
+    },
+    {
+        "assassin", 
+        {{OBJ_COFFERS, COFFER_STEALTH_MINOR}, {OBJ_COFFERS, COFFER_STEALTH_MAJOR}}, 
+        {{SK_DODGING, 2}, {SK_STEALTH, 2}}
+    },
+    {
+        "fashionista", 
+        {{OBJ_COFFERS, COFFER_JEWELRY_MINOR}, {OBJ_COFFERS, COFFER_AUX_MAJOR}}, 
+        {{SK_DODGING, 2}, {SK_STEALTH, 2}}
+    },
+    {
+        "aristacrat", 
+        {{OBJ_COFFERS, COFFER_JEWELRY_MINOR}, {OBJ_COFFERS, COFFER_JEWELRY_MAJOR}}, 
+        {{SK_FIGHTING, 2}, {SK_DODGING, 2}}
+    },
+    {
+        "magi",
+        {{OBJ_COFFERS, COFFER_MAGIC_MINOR}, {OBJ_COFFERS, COFFER_MAGIC_MAJOR}}, 
+        {{SK_SPELLCASTING, 2}, {SK_DODGING, 2}}
+    },
+    // COFFER_WEAPON_MINOR, // not currently given
+};
+
+// Daniel - Done. High, set up bundle choice logic
+static vector<item_skill_bundle> _get_bundle_choice(const newgame_def& ng)
+{
+    vector<item_skill_bundle> choices;
+    for (item_skill_bundle& bundle : bundle_options)
+    {
+        choices.push_back(bundle);
+    }
+    return choices;
+}
+
+
+// Returns false if aborted, else an actual heir choice
+// is written to ng.heir for the jobs that call
+// _update_weapon() later.
+static bool _choose_bundle(newgame_def& ng, newgame_def& ng_choice,
+                           const newgame_def& defaults)
+{
+    if (! (job_gets_bundle_choice(ng.job)))
+        return true;
+
+    vector<item_skill_bundle> options = _get_bundle_choice(ng);
+
+    ASSERT(!options.empty());
+    if (options.size() == 1)
+    {
+        ng.bundle = ng_choice.bundle = options[0];
+        return true;
+    }
+
+    if (!_prompt_bundle_choice(ng, ng_choice, defaults, options))
+        return false;
+    
+    ng.bundle = ng_choice.bundle;
+    
+    return true;
+}
+
 
 static void _construct_weapon_menu(const newgame_def& ng,
                                    const weapon_type& defweapon,

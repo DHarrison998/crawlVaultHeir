@@ -11,7 +11,7 @@ enum class weapon_choice
     none,   ///< No weapon choice
     plain,  ///< Normal weapon choice
     good,   ///< Chooses from "good" weapons
-//    heir,   ///< Chooses from "heirlooms"
+    bundle, ///< Choice of starting item bundle
 };
 
 struct job_def

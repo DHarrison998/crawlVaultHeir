@@ -2498,6 +2498,8 @@ void newgame_def::write_prefs(FILE *f) const
         fprintf(f, "background = %s\n", _job_to_str(job).c_str());
     if (weapon != WPN_UNKNOWN)
         fprintf(f, "weapon = %s\n", _weapon_to_str(weapon).c_str());
+    // Daniel - High, probably need to write out the starting bundle choice here, 
+    // but it's complex.
     if (seed != 0)
         fprintf(f, "game_seed = %" PRIu64 "\n", seed);
     fprintf(f, "fully_random = %s\n", fully_random ? "yes" : "no");

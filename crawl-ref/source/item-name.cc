@@ -1223,7 +1223,11 @@ string sub_type_string(const item_def &item, bool known)
 {
     const object_class_type type = item.base_type;
     const int sub_type = item.sub_type;
+    return sub_type_string(type, sub_type, known, item.plus);
+}
 
+string sub_type_string(const object_class_type type, int sub_type, bool known, int plus)
+{
     switch (type)
     {
     case OBJ_WEAPONS:  // deliberate fall through, as XXX_prop is a local
@@ -1244,15 +1248,15 @@ string sub_type_string(const item_def &item, bool known)
             if (!known)
                 return "manual";
             string bookname = "manual of ";
-            bookname += skill_name(static_cast<skill_type>(item.plus));
+            bookname += skill_name(static_cast<skill_type>(plus));
             return bookname;
             }
         case BOOK_PARCHMENT:
             {
-            if (item.plus == 0 || !known)
+            if (plus == 0 || !known)
                 return "parchment";
             string parchmentname = "parchment of ";
-            parchmentname += spell_title(static_cast<spell_type>(item.plus));
+            parchmentname += spell_title(static_cast<spell_type>(plus));
             return parchmentname;
             }
         case BOOK_NECRONOMICON:

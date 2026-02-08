@@ -7,6 +7,7 @@
 #include "game-type.h"
 #include "item-prop-enum.h"
 #include "job-type.h"
+#include "newgame.h"
 #include "species-type.h"
 
 using std::string;
@@ -29,6 +30,7 @@ struct newgame_def
             && species == other.species
             && job == other.job
             && weapon == other.weapon
+            && bundle == other.bundle
             && fully_random == other.fully_random;
     }
 
@@ -60,6 +62,7 @@ struct newgame_def
     job_type job;
 
     weapon_type weapon;
+    item_skill_bundle bundle;
 
     // Only relevant for character choice, where the entire
     // character was randomly picked in one step.

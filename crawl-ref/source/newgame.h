@@ -26,6 +26,8 @@ bool choose_game(newgame_def& ng, newgame_def& choice,
 
 weapon_type starting_weapon_upgrade(weapon_type wp, job_type job,
                                             species_type species);
+coffer_type get_coffer_choice(coffer_type type, job_type job,
+                                            species_type species);
 
 string newgame_random_name();
 
@@ -54,4 +56,43 @@ struct species_group
     /// A method to attach the group to a freeform.
     void attach(const newgame_def& ng, const newgame_def& defaults,
                 UINewGameMenu* menu, menu_letter &letter);
+};
+
+struct item_skill_bundle
+{
+    const char* name;
+    vector<pair<object_class_type, uint8_t>> items;
+    vector<pair<skill_type, int>> skills;
+
+    bool operator==(const item_skill_bundle& other) const
+    {
+        if (items.size() != other.items.size()
+            || skills.size() != other.skills.size())
+            return false;
+
+        if (name != other.name)
+            return false;
+        
+        for (unsigned int i = 0; i < items.size(); ++i)
+        {
+            if (items[i] != other.items[i])
+                return false;
+        }
+        for (unsigned int i = 0; i < skills.size(); ++i)
+        {
+            if (skills[i] != other.skills[i])
+                return false;
+        }
+        return true;
+    }
+    bool operator!=(const item_skill_bundle& other) const
+    {
+        return !(*this == other);
+    }
+    // void clear() const // Daniel - Warning, probably need to do this right. Should the whole thing be a pointer in newgame-def.h?
+    // {
+    //     // name = nullptr;
+    //     items.clear();
+    //     skills.clear();
+    // }
 };

@@ -2,7 +2,7 @@
 Air Elementalist
 
 Air Elementalists have learned the Shock spell. Their electrical magic can harm
-groups of foes, while their air spells assist in fighting or fleeing enemies. Daniel - High, add description for new job to this file.
+groups of foes, while their air spells assist in fighting or fleeing enemies.
 %%%%
 Artificer
 
@@ -82,6 +82,10 @@ Ice Elementalist
 
 Ice Elementalists begin with the Freeze spell. Their later spells provide strong
 offence and defence, but may restrict their movement.
+%%%%
+Inheritor
+
+Inheritors start with a pair of coffers from their lineage a few relevant skills. With practice they can prove themselves worthy of their birthright.  
 %%%%
 Monk
 

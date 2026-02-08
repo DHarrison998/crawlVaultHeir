@@ -3410,7 +3410,7 @@ vector<skill_type> get_coffer_skills(coffer_type type)
     vector<skill_type> skills;
     vector<skill_type> weapon_skills = {
         SK_SHORT_BLADES, SK_LONG_BLADES, SK_RANGED_WEAPONS,
-        SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_STAVES, SK_THROWING
+        SK_MACES_FLAILS, SK_AXES, SK_POLEARMS, SK_STAVES //, SK_THROWING
     };
     vector<skill_type> armor_skills = {SK_ARMOUR, SK_SHIELDS};
     vector<skill_type> jewellery_skills = {SK_DODGING};
@@ -3424,7 +3424,7 @@ vector<skill_type> get_coffer_skills(coffer_type type)
         SK_NECROMANCY, SK_FORGECRAFT, SK_TRANSLOCATIONS, SK_ALCHEMY,
         SK_FIRE_MAGIC, SK_ICE_MAGIC, SK_AIR_MAGIC, SK_EARTH_MAGIC
     };
-    vector<skill_type> other_skills = {SK_INVOCATIONS, SK_EVOCATIONS, SK_SHAPESHIFTING}; // Daniel, maybe invocations, evokations, and shapeshifting could be put to use with things that let you go invisible, blink, god stuff, or even special talismans? What if a vault could contain 2 other vaults or something?
+    vector<skill_type> other_skills = {SK_INVOCATIONS, SK_EVOCATIONS, SK_SHAPESHIFTING}; // Daniel - Question: maybe invocations, evocations, and shapeshifting could be put to use with things that let you go invisible, blink, god stuff, or even special talismans? What if a vault could contain 2 other vaults or something?
 
     switch (type)
     {
@@ -3488,25 +3488,30 @@ int get_coffer_skill_requirement(coffer_type type)
     }
 }
 
+// Daniel - Done. Helper func for skill hitting target
+bool skill_at_least(skill_type skill, int threshold)
+{
+    return (you.skill(skill) >= threshold);
+}
+
 // Daniel - Done. High, fix up old func
 bool coffer_skill_met(coffer_type type)
 {
     vector<skill_type> skills = get_coffer_skills(type);
     bool skill_met = false;
     int skill_requirement = get_coffer_skill_requirement(type);
-    mprf("test:coffer_skill_met :: requirement=%d\n", skill_requirement);
+    // mprf("test:coffer_skill_met :: requirement=%d\n", skill_requirement);
     for (int i = 0; i < static_cast<int>(skills.size()); ++i)
     {
-        mprf("skill #%d %s at %d | %s", i, skill_name(skills[i]), you.skill(skills[i]),
-            i%2==0 ? "" : "\n");
-        if (you.skill(skills[i]) >= skill_requirement)
+        // mprf("skill #%d %s at %d | %s", i, skill_name(skills[i]), you.skill(skills[i]),
+        //    i%2==0 ? "" : "\n");
+        if (skill_at_least(skills[i], skill_requirement))
         {
             skill_met = true;
             break;
         }
     }
-    mprf("\n");
-    mprf("test: coffer_skill_met? :: met = %s\n\n", skill_met ? "true" : "false");
+    // mprf("\ntest: coffer_skill_met? :: met = %s\n\n", skill_met ? "true" : "false");
     
     return skill_met;
 }
@@ -3686,6 +3691,9 @@ bool use_coffer_vault(item_def& coffer)
         UNRAND_AUGMENTATION,                // robe of Augmentation
     };
     vector<unrand_type> choices;
+    int i_choice = 0;
+    vector<vector<unrand_type>> weapon_choices;
+    int skill_requirement = 0;
     switch (coffer_item.sub_type)
     {
     case COFFER_WEAPON_MINOR: 
@@ -3704,20 +3712,31 @@ bool use_coffer_vault(item_def& coffer)
         );
         break;
     case COFFER_WEAPON_MAJOR:
-        choices = random_choose(
-            short_blade,
-            long_blade,
-            axe,
-            polearm,
-            mace_and_whip,
-            ranged
-        );
+        skill_requirement = get_coffer_skill_requirement(COFFER_WEAPON_MAJOR);
+        if (skill_at_least(SK_SHORT_BLADES, skill_requirement))
+            weapon_choices.push_back(short_blade);
+        if (skill_at_least(SK_LONG_BLADES, skill_requirement))
+            weapon_choices.push_back(long_blade);
+        if (skill_at_least(SK_MACES_FLAILS, skill_requirement))
+            weapon_choices.push_back(mace_and_whip);
+        if (skill_at_least(SK_AXES, skill_requirement))
+            weapon_choices.push_back(axe);
+        if (skill_at_least(SK_POLEARMS, skill_requirement))
+            weapon_choices.push_back(polearm);
+        if (skill_at_least(SK_RANGED_WEAPONS, skill_requirement))
+            weapon_choices.push_back(ranged);
+        if (skill_at_least(SK_STAVES, skill_requirement)) // Daniel - Question, where should staves live? Alternate way to get staves from major magic coffer?
+            weapon_choices.push_back(polearm);
+        ASSERT(weapon_choices.size() > 0);
+        i_choice = random2(weapon_choices.size());
+        choices = weapon_choices[i_choice];
         break;
     case COFFER_ARMOR_MINOR:
         choices = shield;
         break;
     case COFFER_ARMOR_MAJOR:
-        // Daniel - Mid, make sure barding is only picked if "you" can wear barding.
+        // Daniel - Mid, make sure barding is only picked if "you" can wear barding. 
+        // kinda like this you_can_wear(SLOT_BODY_ARMOUR) maybe?
         choices = random_choose(armor, barding);
         break;
     case COFFER_MAGIC_MINOR:

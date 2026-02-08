@@ -81,13 +81,19 @@ void job_stat_init(job_type job)
 }
 
 bool job_has_weapon_choice(job_type job)
-{
-    return _job_def(job).wchoice != weapon_choice::none;
+{ // Daniel - Question, should we split out bundles from weapon_choice, or rename it at least?
+    return _job_def(job).wchoice != weapon_choice::none
+        && _job_def(job).wchoice != weapon_choice::bundle;
 }
 
 bool job_gets_good_weapons(job_type job)
 {
     return _job_def(job).wchoice == weapon_choice::good;
+}
+
+bool job_gets_bundle_choice(job_type job)
+{
+    return _job_def(job).wchoice == weapon_choice::bundle;
 }
 
 void give_job_equipment(job_type job)

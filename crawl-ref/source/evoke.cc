@@ -1022,7 +1022,7 @@ string cannot_evoke_item_reason(const item_def *item, bool temp, bool ident)
 
     if (item->base_type == OBJ_COFFERS)
     {
-        mprf("test:cannot_evoke_item_reason");
+        // mprf("test:cannot_evoke_item_reason");
         if (! coffer_skill_met((coffer_type)item->sub_type) && temp)
             return "You aren't skilled enough to open this coffer.";
         return "";

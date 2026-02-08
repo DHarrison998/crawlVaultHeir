@@ -1,5 +1,5 @@
-enum: JOB_HEIR
-name: "Heir"
+enum: JOB_INHERITOR
+name: "Inheritor"
 category: Adventurer
 category_priority: 1
 str: 4
@@ -7,10 +7,7 @@ int: 4
 dex: 4
 equipment:
   - "robe"
-  - "protean talisman"
-  - "Small Weapon Vault"
-  - "scroll of acquirement"
-weapon_choice: good
+weapon_choice: bundle
 recommended_species:
   - naga
   - merfolk

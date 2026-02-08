@@ -163,6 +163,7 @@ string get_corpse_name(const item_def &corpse,
 const char *base_type_string(object_class_type type);
 const char *base_type_string(const item_def &item);
 
+string sub_type_string(const object_class_type type, int sub_type, bool known, int plus = 0);
 string sub_type_string(const item_def &item, bool known = true);
 
 string ego_type_string(const item_def &item, bool terse = false);

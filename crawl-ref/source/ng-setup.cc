@@ -298,6 +298,18 @@ void give_items_skills(const newgame_def& ng)
     else if (job_has_weapon_choice(you.char_class))
         newgame_make_item(OBJ_WEAPONS, ng.weapon);
 
+    if (job_gets_bundle_choice(you.char_class))
+    {
+        for (pair<object_class_type, uint8_t> item : ng.bundle.items)
+        {
+            newgame_make_item(item.first, item.second);
+        }
+        for (pair<skill_type, int> skill : ng.bundle.skills)
+        {
+            you.skills[skill.first] += skill.second;
+        }
+    }
+
     give_job_equipment(you.char_class);
     give_job_skills(you.char_class);
     _give_job_spells(you.char_class);
