@@ -15,6 +15,7 @@
 #include "art-enum.h"
 #include "chardump.h"
 #include "cloud.h"
+#include "coffer.h"
 #include "colour.h"
 #include "coordit.h"
 #include "corpse.h"
@@ -3523,173 +3524,6 @@ bool use_coffer_vault(item_def& coffer)
 
     item_def& coffer_item = you.inv[_get_item_slot_maybe_with_move(coffer)];
     
-    vector<unrand_type> short_blade = {
-        UNRAND_SPRIGGANS_KNIFE,             // Spriggan's Knife
-        UNRAND_ARC_BLADE,                   // arc blade
-        UNRAND_CAPTAIN,                     // captain's cutlass
-        UNRAND_GYRE,                        // pair of quick blades "Gyre" and "Gimble"
-        UNRAND_VAMPIRES_TOOTH               // Vampire's Tooth
-    };
-    vector<unrand_type> long_blade = {
-        UNRAND_THROATCUTTER,                // Throatcutter
-        UNRAND_SINGING_SWORD,               // Singing Sword
-        UNRAND_THERMIC_ENGINE,              // Maxwell's thermic engine
-        UNRAND_AUTUMN_KATANA,               // autumn katana
-        UNRAND_LEECH,                       // demon blade "Leech"
-        UNRAND_ZEALOT_SWORD,                // zealot's sword
-        UNRAND_POWER,                       // sword of Power
-        UNRAND_DREAD_KNIGHT,                // sword of the Dread Knight
-        UNRAND_CEREBOV,                     // sword of Cerebov
-        UNRAND_PLUTONIUM_SWORD,             // plutonium sword
-    };
-    vector<unrand_type> axe = {
-        UNRAND_ARGA,                        // mithril axe "Arga"
-        UNRAND_DEMON_AXE,                   // obsidian axe
-        UNRAND_HOLY_AXE,                    // consecrated labrys
-        UNRAND_WOODCUTTERS_AXE,             // woodcutter's axe
-        UNRAND_TROG,                        // Wrath of Trog
-        UNRAND_FROSTBITE,                   // frozen axe "Frostbite"
-        UNRAND_WOE,                         // Axe of Woe
-    };
-    vector<unrand_type> polearm = {
-        UNRAND_FORCE_LANCE,                 // Force Lance
-        UNRAND_WYRMBANE,                    // lance "Wyrmbane"
-        UNRAND_OCTOPUS_KING,                // trident of the Octopus King
-        UNRAND_RIFT,                        // demon trident "Rift"
-        UNRAND_CONDEMNATION,                // trishula "Condemnation"
-        UNRAND_FINISHER,                    // scythe "Finisher"
-        UNRAND_CURSES,                      // scythe of Curses
-        UNRAND_GUARD,                       // glaive of the Guard
-        UNRAND_PRUNE,                       // glaive of Prune
-        UNRAND_LOCHABER_AXE,                // Lochaber axe
-    };
-    vector<unrand_type> mace_and_whip = {
-        UNRAND_DEVASTATOR,                  // shillelagh "Devastator"
-        UNRAND_SNAKEBITE,                   // whip "Snakebite"
-        UNRAND_SPELLBINDER,                 // demon whip "Spellbinder"
-        UNRAND_EOS,                         // morningstar "Eos"
-        UNRAND_TORMENT,                     // sceptre of Torment
-        UNRAND_ASMODEUS,                    // sceptre of Asmodeus
-        UNRAND_UNDEADHUNTER,                // great mace "Undeadhunter"
-        UNRAND_FIRESTARTER,                 // great mace "Firestarter"
-        UNRAND_VARIABILITY,                 // mace of Variability
-        UNRAND_DARK_MAUL,                   // dark maul
-        UNRAND_SKULLCRUSHER,                // giant club "Skullcrusher"
-    };
-    vector<unrand_type> ranged = {
-        UNRAND_PUNK,                        // greatsling "Punk"
-        UNRAND_ZEPHYR,                      // longbow "Zephyr"
-        UNRAND_STORM_BOW,                   // storm bow
-        UNRAND_MULE,                        // hand cannon "Mule"
-        UNRAND_DAMNATION,                   // arbalest "Damnation"
-        UNRAND_SNIPER,                      // heavy crossbow "Sniper"
-    };
-    vector<unrand_type> staff = {
-        UNRAND_OLGREB,                      // staff of Olgreb
-        UNRAND_ELEMENTAL_STAFF,             // Elemental Staff
-        UNRAND_MAJIN,                       // Majin-Bo
-        UNRAND_MEEK,                        // staff of the Meek
-        UNRAND_ORDER,                       // lajatang of Order
-    };
-    vector<unrand_type> orb = {
-        UNRAND_CHARLATANS_ORB,              // Charlatan's Orb
-        UNRAND_WUCAD_MU,                    // crystal ball of Wucad Mu
-        UNRAND_DISPATER,                    // orb of Dispater
-        UNRAND_SKULL_OF_ZONGULDROK,         // skull of Zonguldrok
-        UNRAND_BATTLE,                      // sphere of Battle
-    };
-    vector<unrand_type> cloak = {
-        UNRAND_THIEF,                       // cloak of the Thief
-        UNRAND_STARLIGHT,                   // cloak of Starlight
-        UNRAND_RATSKIN_CLOAK,               // ratskin cloak
-        UNRAND_FISTICLOAK,                  // fungal fisticloak
-        UNRAND_DRAGONSKIN,                  // dragonskin cloak
-    };
-    vector<unrand_type> hat = {
-        UNRAND_ALCHEMIST,                   // hat of the Alchemist
-        UNRAND_DRAGONMASK,                  // mask of the Dragon
-        UNRAND_BEAR_SPIRIT,                 // hat of the Bear Spirit
-        UNRAND_HOOD_ASSASSIN,               // hood of the Assassin
-        UNRAND_DYROVEPREVA,                 // crown of Dyrovepreva
-        UNRAND_PONDERING,                   // hat of Pondering
-        // This next one is new!
-        UNRAND_VAINGLORY,                   // crown of vainglory
-    };
-    vector<unrand_type> glove = {
-        UNRAND_FENCERS,                     // fencer's gloves
-        UNRAND_GADGETEER,                   // gloves of the gadgeteer
-        UNRAND_DELATRAS_GLOVES,             // Delatra's gloves
-        UNRAND_WAR,                         // gauntlets of War
-        UNRAND_POWER_GLOVES,                // Mad Mage's Maulers
-    };
-    vector<unrand_type> boot = {
-        UNRAND_SLICK_SLIPPERS,              // slick slippers
-        UNRAND_SEVEN_LEAGUE_BOOTS,          // seven-league boots
-        UNRAND_MOUNTAIN_BOOTS,              // mountain boots
-    };
-    vector<unrand_type> shield = {
-        UNRAND_WARLOCK_MIRROR,              // warlock's mirror
-        UNRAND_RESISTANCE,                  // shield of Resistance
-        UNRAND_STORM_QUEEN,                 // Storm Queen's Shield
-        UNRAND_GONG,                        // shield of the Gong
-        UNRAND_IGNORANCE,                   // tower shield of Ignorance
-    };
-    vector<unrand_type> armor = {
-        UNRAND_VICTORY,                     // toga "Victory"
-        UNRAND_VINES,                       // robe of Vines
-        UNRAND_RCLOUDS,                     // robe of Clouds
-        UNRAND_FOLLY,                       // robe of Folly
-        UNRAND_AUGMENTATION,                // robe of Augmentation
-        UNRAND_MISFORTUNE,                  // robe of Misfortune
-        UNRAND_NIGHT,                       // robe of Night
-        UNRAND_ZHOR,                        // skin of Zhor
-        UNRAND_SALAMANDER,                  // salamander hide armour
-        UNRAND_EMBRACE,                     // Cigotuvi's embrace
-        UNRAND_JUSTICARS_REGALIA,           // justicar's regalia
-        UNRAND_MOON_TROLL_LEATHER_ARMOUR,   // moon troll leather armour
-        UNRAND_KRYIAS,                      // Kryia's mail coat
-        UNRAND_FAERIE,                      // faerie dragon scales
-        UNRAND_LEAR,                        // Lear's hauberk
-        UNRAND_MAXWELL,                     // Maxwell's patent armour
-        UNRAND_DRAGON_KING,                 // scales of the Dragon King
-        UNRAND_ORANGE_CRYSTAL_PLATE_ARMOUR, // orange crystal plate armour
-    };
-    vector<unrand_type> barding = {
-        UNRAND_LIGHTNING_SCALES,            // lightning scales
-        UNRAND_BLACK_KNIGHT_HORSE,          // Black Knight's barding
-    };
-    vector<unrand_type> ring = {
-        UNRAND_MAGE,                        // ring of the Mage
-        UNRAND_TORTOISE,                    // ring of the Tortoise
-        UNRAND_HARE,                        // ring of the Hare
-        UNRAND_SHADOWS,                     // ring of Shadows
-        UNRAND_OCTOPUS_KING_RING,           // ring of the Octopus King
-    };
-    vector<unrand_type> amulet = {      
-        UNRAND_SHIELDING,                   // brooch of Shielding
-        UNRAND_BLOODLUST,                   // necklace of Bloodlust
-        UNRAND_FOUR_WINDS,                  // amulet of the Four Winds
-        UNRAND_AIR,                         // amulet of the Air
-        UNRAND_FINGER_AMULET,               // macabre finger necklace
-        UNRAND_VITALITY,                    // amulet of Vitality
-        UNRAND_DREAMSHARD_NECKLACE,         // dreamshard necklace
-        UNRAND_ELEMENTAL_VULNERABILITY,     // amulet of Elemental Vulnerability
-        UNRAND_HERMITS_PENDANT,             // Hermit's Pendant
-    };
-    vector<unrand_type> stealth = { 
-        UNRAND_SHADOWS,                     // ring of Shadows
-        UNRAND_NIGHT,                       // robe of Night
-        UNRAND_HOOD_ASSASSIN,               // hood of the Assassin
-        UNRAND_THIEF,                       // cloak of the Thief
-    };
-    vector<unrand_type> magic = {   
-        UNRAND_VITALITY,                    // amulet of Vitality
-        UNRAND_ELEMENTAL_VULNERABILITY,     // amulet of Elemental Vulnerability
-        UNRAND_MAGE,                        // ring of the Mage
-        UNRAND_VICTORY,                     // toga "Victory"
-        UNRAND_FOLLY,                       // robe of Folly
-        UNRAND_AUGMENTATION,                // robe of Augmentation
-    };
     vector<unrand_type> choices;
     int i_choice = 0;
     vector<vector<unrand_type>> weapon_choices;
@@ -3703,81 +3537,81 @@ bool use_coffer_vault(item_def& coffer)
         // Could separate into 1 vs. 2 handed
         // Could separate into low vs. high power items
         choices = random_choose(
-            short_blade,
-            long_blade,
-            axe,
-            polearm,
-            mace_and_whip,
-            ranged
+            coffer_short_blade,
+            coffer_long_blade,
+            coffer_axe,
+            coffer_polearm,
+            coffer_mace_and_flail,
+            coffer_ranged
         );
         break;
     case COFFER_WEAPON_MAJOR:
         skill_requirement = get_coffer_skill_requirement(COFFER_WEAPON_MAJOR);
         if (skill_at_least(SK_SHORT_BLADES, skill_requirement))
-            weapon_choices.push_back(short_blade);
+            weapon_choices.push_back(coffer_short_blade);
         if (skill_at_least(SK_LONG_BLADES, skill_requirement))
-            weapon_choices.push_back(long_blade);
+            weapon_choices.push_back(coffer_long_blade);
         if (skill_at_least(SK_MACES_FLAILS, skill_requirement))
-            weapon_choices.push_back(mace_and_whip);
+            weapon_choices.push_back(coffer_mace_and_flail);
         if (skill_at_least(SK_AXES, skill_requirement))
-            weapon_choices.push_back(axe);
+            weapon_choices.push_back(coffer_axe);
         if (skill_at_least(SK_POLEARMS, skill_requirement))
-            weapon_choices.push_back(polearm);
+            weapon_choices.push_back(coffer_polearm);
         if (skill_at_least(SK_RANGED_WEAPONS, skill_requirement))
-            weapon_choices.push_back(ranged);
+            weapon_choices.push_back(coffer_ranged);
         if (skill_at_least(SK_STAVES, skill_requirement)) // Daniel - Question, where should staves live? Alternate way to get staves from major magic coffer?
-            weapon_choices.push_back(polearm);
+            weapon_choices.push_back(coffer_polearm);
         ASSERT(weapon_choices.size() > 0);
         i_choice = random2(weapon_choices.size());
         choices = weapon_choices[i_choice];
         break;
     case COFFER_ARMOR_MINOR:
-        choices = shield;
+        choices = coffer_shield;
         break;
     case COFFER_ARMOR_MAJOR:
         // Daniel - Mid, make sure barding is only picked if "you" can wear barding. 
         // kinda like this you_can_wear(SLOT_BODY_ARMOUR) maybe?
-        choices = random_choose(armor, barding);
+        choices = random_choose(coffer_armor, coffer_barding);
         break;
     case COFFER_MAGIC_MINOR:
-        choices = magic;
+        choices = coffer_magic;
         break;
     case COFFER_MAGIC_MAJOR:
-        choices = staff;
+        choices = coffer_staff;
         break;
     case COFFER_STEALTH_MINOR:
-        choices = stealth;
+        choices = coffer_stealth;
         break;
     case COFFER_STEALTH_MAJOR:
-        choices = short_blade;
+        choices = coffer_short_blade;
         break;
     case COFFER_JEWELRY_MINOR:
-        choices = ring;
+        choices = coffer_ring;
         break;
     case COFFER_JEWELRY_MAJOR:
-        choices = random_choose(ring, amulet);
+        choices = random_choose(coffer_ring, coffer_amulet);
         break;
     case COFFER_AUX_MINOR:
         choices = random_choose(
-            orb,
-            cloak,
-            hat,
-            glove,
-            boot
+            coffer_orb,
+            coffer_cloak,
+            coffer_hat,
+            coffer_glove,
+            coffer_boot
         );
         break;
     case COFFER_AUX_MAJOR: 
         // Daniel - Question, should the major aux give 2 things? Or offer different things? Or kill one of the options?
         choices = random_choose(
-            orb,
-            cloak,
-            hat,
-            glove,
-            boot
+            coffer_orb,
+            coffer_cloak,
+            coffer_hat,
+            coffer_glove,
+            coffer_boot
         );
         break;
     default:
-        choices = glove;
+        choices = coffer_glove;
         break;
     }
 

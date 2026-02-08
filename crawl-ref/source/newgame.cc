@@ -7,6 +7,7 @@
 
 #include "newgame.h"
 
+#include "bundle.h"
 #include "cio.h"
 #include "command.h"
 #include "database.h"
@@ -1942,41 +1943,6 @@ static bool _prompt_bundle_choice(const newgame_def& ng, newgame_def& ng_choice,
 
     return ret;
 }
-
-static item_skill_bundle bundle_options[] = 
-{
-    {
-        "warrior", 
-        {{OBJ_COFFERS, COFFER_WEAPON_MAJOR}, {OBJ_COFFERS, COFFER_ARMOR_MINOR}}, 
-        {{SK_FIGHTING, 2}, {SK_SHIELDS, 2}}
-    },
-    {
-        "bullwark", 
-        {{OBJ_COFFERS, COFFER_ARMOR_MAJOR}, {OBJ_COFFERS, COFFER_AUX_MINOR}}, 
-        {{SK_FIGHTING, 2}, {SK_ARMOUR, 2}}
-    },
-    {
-        "assassin", 
-        {{OBJ_COFFERS, COFFER_STEALTH_MINOR}, {OBJ_COFFERS, COFFER_STEALTH_MAJOR}}, 
-        {{SK_DODGING, 2}, {SK_STEALTH, 2}}
-    },
-    {
-        "fashionista", 
-        {{OBJ_COFFERS, COFFER_JEWELRY_MINOR}, {OBJ_COFFERS, COFFER_AUX_MAJOR}}, 
-        {{SK_DODGING, 2}, {SK_STEALTH, 2}}
-    },
-    {
-        "aristacrat", 
-        {{OBJ_COFFERS, COFFER_JEWELRY_MINOR}, {OBJ_COFFERS, COFFER_JEWELRY_MAJOR}}, 
-        {{SK_FIGHTING, 2}, {SK_DODGING, 2}}
-    },
-    {
-        "magi",
-        {{OBJ_COFFERS, COFFER_MAGIC_MINOR}, {OBJ_COFFERS, COFFER_MAGIC_MAJOR}}, 
-        {{SK_SPELLCASTING, 2}, {SK_DODGING, 2}}
-    },
-    // COFFER_WEAPON_MINOR, // not currently given
-};
 
 // Daniel - Done. High, set up bundle choice logic
 static vector<item_skill_bundle> _get_bundle_choice(const newgame_def& ng)

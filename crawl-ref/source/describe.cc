@@ -7716,7 +7716,7 @@ static string _describe_talisman(const item_def &item, bool verbose)
     return description.str();
 }
 
-// Daniel - Temp, half done. high, add func to describe the vault. See this and next func.
+// Daniel - high, [Temp, half done] add func to describe the vault. See this and next func.
 static string _describe_coffer(const item_def &item, bool verbose)
 {
     ostringstream description;

@@ -63,6 +63,7 @@ struct item_skill_bundle
     const char* name;
     vector<pair<object_class_type, uint8_t>> items;
     vector<pair<skill_type, int>> skills;
+    bool starting_spell;
 
     bool operator==(const item_skill_bundle& other) const
     {

@@ -3,6 +3,8 @@
 #include "ng-setup.h"
 
 #include "adjust.h"
+#include "bundle.h"
+#include "coffer.h"
 #include "dungeon.h"
 #include "end.h"
 #include "files.h"
@@ -16,6 +18,7 @@
 #include "jobs.h"
 #include "message.h"
 #include "mutation.h"
+#include "newgame.h"
 #include "ng-init.h"
 #include "ng-wanderer.h"
 #include "options.h"
@@ -308,6 +311,18 @@ void give_items_skills(const newgame_def& ng)
         {
             you.skills[skill.first] += skill.second;
         }
+        if (ng.bundle.starting_spell)
+        {
+            int array_length = sizeof(starting_bundle_spells)/sizeof(starting_bundle_spells[0]);
+            int spell_index = random2(array_length);
+            spell_type starting_spell = starting_bundle_spells[spell_index];
+            vector<spell_type> spells;
+            spells.push_back(starting_spell);
+            library_add_spells(spells, true);
+            add_spell_to_memory(starting_spell);
+        }
+        else
+            newgame_make_item(OBJ_WEAPONS, WPN_CLUB);
     }
 
     give_job_equipment(you.char_class);

@@ -877,7 +877,7 @@ enum item_set_type
     NUM_ITEM_SET_TYPES
 };
 
-// Daniel - enum location
+// Daniel - Done. enum location
 enum coffer_type
 {
     COFFER_WEAPON_MINOR,
