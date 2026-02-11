@@ -1214,7 +1214,7 @@ Large Magic Coffer
 
 A sealed box small enough to fit in a child's palm, yet brimming with the promise of more. It holds an ancient treasure inside, though only the worthy may open it to receive their prize.
 
-(If your skill in a school of magic is at least 10, attempting to use this will transform it into a magical staff worthy of your skill.)
+(If your skill in a school of magic is at least 10, attempting to use this will transform it into armor or a magical staff worthy of your skill.)
 %%%%
 Small Stealth Coffer
 
@@ -1226,7 +1226,7 @@ Large Stealth Coffer
 
 A sealed box small enough to fit in a child's palm, yet brimming with the promise of more. It holds an ancient treasure inside, though only the worthy may open it to receive their prize.
 
-(If your stealth skill is at least 10, attempting to use this will transform it into a deadly blade worthy of your skill.)
+(If your stealth skill is at least 10, attempting to use this will transform it into light armor or a deadly blade worthy of your skill.)
 %%%%
 Small Jewelry Coffer
 
@@ -1250,7 +1250,7 @@ Large Aux Coffer
 
 A sealed box small enough to fit in a child's palm, yet brimming with the promise of more. It holds an ancient treasure inside, though only the worthy may open it to receive their prize.
 
-(If your fighting or unarmed skill is at least 10, attempting to use this will transform it into a piece of auxiliary armor worthy of your skill.)
+(If your fighting or unarmed skill is at least 10, attempting to use this will transform it into a pair of auxiliary armors worthy of your skill.)
 %%%%
 protean talisman
 

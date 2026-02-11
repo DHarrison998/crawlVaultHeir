@@ -198,6 +198,28 @@ static vector<unrand_type> coffer_barding = {
     UNRAND_LIGHTNING_SCALES,            // lightning scales
     UNRAND_BLACK_KNIGHT_HORSE,          // Black Knight's barding
 };
+static vector<unrand_type> coffer_armor_light = {
+    UNRAND_VICTORY,                     // toga "Victory"
+    UNRAND_VINES,                       // robe of Vines
+    UNRAND_RCLOUDS,                     // robe of Clouds
+    UNRAND_FOLLY,                       // robe of Folly
+    UNRAND_AUGMENTATION,                // robe of Augmentation
+    UNRAND_MISFORTUNE,                  // robe of Misfortune
+    UNRAND_NIGHT,                       // robe of Night
+    UNRAND_ZHOR,                        // skin of Zhor
+    UNRAND_SALAMANDER,                  // salamander hide armour
+    UNRAND_EMBRACE,                     // Cigotuvi's embrace
+    UNRAND_MOON_TROLL_LEATHER_ARMOUR,   // moon troll leather armour
+};
+static vector<unrand_type> coffer_armor_heavy = {
+    UNRAND_JUSTICARS_REGALIA,           // justicar's regalia
+    UNRAND_KRYIAS,                      // Kryia's mail coat
+    UNRAND_FAERIE,                      // faerie dragon scales
+    UNRAND_LEAR,                        // Lear's hauberk
+    UNRAND_MAXWELL,                     // Maxwell's patent armour
+    UNRAND_DRAGON_KING,                 // scales of the Dragon King
+    UNRAND_ORANGE_CRYSTAL_PLATE_ARMOUR, // orange crystal plate armour
+};
 static vector<unrand_type> coffer_ring = {
     UNRAND_MAGE,                        // ring of the Mage
     UNRAND_TORTOISE,                    // ring of the Tortoise

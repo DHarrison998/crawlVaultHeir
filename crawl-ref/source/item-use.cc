@@ -3517,6 +3517,38 @@ bool coffer_skill_met(coffer_type type)
     return skill_met;
 }
 
+bool use_coffer_vault(item_def& coffer_item, vector<unrand_type> choices)
+{
+    vector<unrand_type> final_choices;
+    for (unsigned int i = 0; i < choices.size(); ++i)
+    {
+        unique_item_status_type status = get_unique_item_status(choices[i]);
+        if (status == UNIQ_NOT_EXISTS)
+            final_choices.push_back(choices[i]);
+    }
+    if (final_choices.size() == 0)
+    {
+        mprf("The coffer in your hands struggles to open.");
+        return false;
+    }
+
+    // mprf("test: use_coffer_vault :: initial pool=%d, real pool=%d\n", choices.size(), final_choices.size());
+    unrand_type choice = final_choices[random2(choices.size())];
+    // Specifying unrand_type as a negative force_ego makes that unrand get made.
+    int unrand_item = items(true, OBJ_RANDOM, OBJ_RANDOM, 50, -choice);
+    // mprf("test: unrand_type = %d\n", choice);
+    
+    item_def &item(env.item[unrand_item]);
+    item.pos = you.pos();
+    // mprf("test: base_type = %d-%s, sub_type = %d-%s\n\n", item.base_type, base_type_string(item), 
+    //     item.sub_type, sub_type_string(item));
+    
+    _move_item_from_floor_to_inv(item);
+    destroy_item(coffer_item, true); 
+    mprf("The coffer opens to reveal the artifact, %s", item.name(DESC_PLAIN));
+    return true;
+}
+
 bool use_coffer_vault(item_def& coffer)
 {
     if (! (coffer_skill_met((coffer_type)coffer.sub_type)))
@@ -3526,7 +3558,7 @@ bool use_coffer_vault(item_def& coffer)
     
     vector<unrand_type> choices;
     int i_choice = 0;
-    vector<vector<unrand_type>> weapon_choices;
+    vector<vector<unrand_type>> valid_choices;
     int skill_requirement = 0;
     switch (coffer_item.sub_type)
     {
@@ -3548,42 +3580,44 @@ bool use_coffer_vault(item_def& coffer)
     case COFFER_WEAPON_MAJOR:
         skill_requirement = get_coffer_skill_requirement(COFFER_WEAPON_MAJOR);
         if (skill_at_least(SK_SHORT_BLADES, skill_requirement))
-            weapon_choices.push_back(coffer_short_blade);
+            valid_choices.push_back(coffer_short_blade);
         if (skill_at_least(SK_LONG_BLADES, skill_requirement))
-            weapon_choices.push_back(coffer_long_blade);
+            valid_choices.push_back(coffer_long_blade);
         if (skill_at_least(SK_MACES_FLAILS, skill_requirement))
-            weapon_choices.push_back(coffer_mace_and_flail);
+            valid_choices.push_back(coffer_mace_and_flail);
         if (skill_at_least(SK_AXES, skill_requirement))
-            weapon_choices.push_back(coffer_axe);
+            valid_choices.push_back(coffer_axe);
         if (skill_at_least(SK_POLEARMS, skill_requirement))
-            weapon_choices.push_back(coffer_polearm);
+            valid_choices.push_back(coffer_polearm);
         if (skill_at_least(SK_RANGED_WEAPONS, skill_requirement))
-            weapon_choices.push_back(coffer_ranged);
+            valid_choices.push_back(coffer_ranged);
         if (skill_at_least(SK_STAVES, skill_requirement)) // Daniel - Question, where should staves live? Alternate way to get staves from major magic coffer?
-            weapon_choices.push_back(coffer_polearm);
-        ASSERT(weapon_choices.size() > 0);
-        i_choice = random2(weapon_choices.size());
-        choices = weapon_choices[i_choice];
+            valid_choices.push_back(coffer_polearm);
+        ASSERT(valid_choices.size() > 0);
+        i_choice = random2(valid_choices.size());
+        choices = valid_choices[i_choice];
         break;
     case COFFER_ARMOR_MINOR:
         choices = coffer_shield;
         break;
     case COFFER_ARMOR_MAJOR:
-        // Daniel - Mid, make sure barding is only picked if "you" can wear barding. 
-        // kinda like this you_can_wear(SLOT_BODY_ARMOUR) maybe?
-        choices = random_choose(coffer_armor, coffer_barding);
+        // Daniel - Done. Mid, make sure barding is only picked if "you" can wear barding. 
+        if (you.can_wear_barding())
+            choices = random_choose(coffer_armor_heavy, coffer_barding);
+        else
+            choices = coffer_armor_heavy;
         break;
     case COFFER_MAGIC_MINOR:
         choices = coffer_magic;
         break;
     case COFFER_MAGIC_MAJOR:
-        choices = coffer_staff;
+        choices = random_choose(coffer_armor_light, coffer_staff);
         break;
     case COFFER_STEALTH_MINOR:
         choices = coffer_stealth;
         break;
     case COFFER_STEALTH_MAJOR:
-        choices = coffer_short_blade;
+        choices = random_choose(coffer_short_blade, coffer_short_blade, coffer_armor_light);
         break;
     case COFFER_JEWELRY_MINOR:
         choices = coffer_ring;
@@ -3592,57 +3626,53 @@ bool use_coffer_vault(item_def& coffer)
         choices = random_choose(coffer_ring, coffer_amulet);
         break;
     case COFFER_AUX_MINOR:
-        choices = random_choose(
-            coffer_orb,
-            coffer_cloak,
-            coffer_hat,
-            coffer_glove,
-            coffer_boot
-        );
+        if (get_player_equip_slot_count(SLOT_ALL_AUX_ARMOUR, nullptr, true, true)
+            || get_player_equip_slot_count(SLOT_HELMET, nullptr, true, true))
+            valid_choices.push_back(coffer_hat);
+        if (get_player_equip_slot_count(SLOT_ALL_AUX_ARMOUR, nullptr, true, true)
+            || get_player_equip_slot_count(SLOT_GLOVES, nullptr, true, true))
+            valid_choices.push_back(coffer_glove);
+        if (get_player_equip_slot_count(SLOT_ALL_AUX_ARMOUR, nullptr, true, true)
+            || get_player_equip_slot_count(SLOT_BOOTS, nullptr, true, true))
+            valid_choices.push_back(coffer_boot);
+        if (get_player_equip_slot_count(SLOT_ALL_AUX_ARMOUR, nullptr, true, true)
+            || get_player_equip_slot_count(SLOT_CLOAK, nullptr, true, true))
+            valid_choices.push_back(coffer_cloak);
+        valid_choices.push_back(coffer_orb);
+        ASSERT(valid_choices.size() > 0);
+        i_choice = random2(valid_choices.size());
+        choices = valid_choices[i_choice];
         break;
-    case COFFER_AUX_MAJOR: 
-        // Daniel - Question, should the major aux give 2 things? Or offer different things? Or kill one of the options?
-        choices = random_choose(
-            coffer_orb,
-            coffer_cloak,
-            coffer_hat,
-            coffer_glove,
-            coffer_boot
-        );
+    case COFFER_AUX_MAJOR:
+        if (get_player_equip_slot_count(SLOT_ALL_AUX_ARMOUR, nullptr, true, true)
+            || get_player_equip_slot_count(SLOT_HELMET, nullptr, true, true))
+            valid_choices.push_back(coffer_hat);
+        if (get_player_equip_slot_count(SLOT_ALL_AUX_ARMOUR, nullptr, true, true)
+            || get_player_equip_slot_count(SLOT_GLOVES, nullptr, true, true))
+            valid_choices.push_back(coffer_glove);
+        if (get_player_equip_slot_count(SLOT_ALL_AUX_ARMOUR, nullptr, true, true)
+            || get_player_equip_slot_count(SLOT_BOOTS, nullptr, true, true))
+            valid_choices.push_back(coffer_boot);
+        if (get_player_equip_slot_count(SLOT_ALL_AUX_ARMOUR, nullptr, true, true)
+            || get_player_equip_slot_count(SLOT_CLOAK, nullptr, true, true))
+            valid_choices.push_back(coffer_cloak);
+        valid_choices.push_back(coffer_orb);
+        ASSERT(valid_choices.size() > 0);
+        i_choice = random2(valid_choices.size());
+        choices = valid_choices[i_choice];
+        use_coffer_vault(coffer_item, choices);
+        
+        valid_choices.erase(valid_choices.begin() + i_choice);
+        ASSERT(valid_choices.size() > 0);
+        i_choice = random2(valid_choices.size());
+        choices = valid_choices[i_choice];
         break;
     default:
         choices = coffer_glove;
         break;
     }
 
-    vector<unrand_type> final_choices;
-    for (unsigned int i = 0; i < choices.size(); ++i)
-    {
-        unique_item_status_type status = get_unique_item_status(choices[i]);
-        if (status == UNIQ_NOT_EXISTS)
-            final_choices.push_back(choices[i]);
-    }
-    if (final_choices.size() == 0)
-    {
-        mprf("The coffer in your hands struggles to open.");
-        return false;
-    }
-
-    mprf("test: use_coffer_vault :: initial pool=%d, real pool=%d\n", choices.size(), final_choices.size());
-    unrand_type choice = final_choices[random2(choices.size())];
-    // Specifying unrand_type as a negative force_ego makes that unrand get made.
-    int unrand_item = items(true, OBJ_RANDOM, OBJ_RANDOM, 50, -choice);
-    mprf("test: unrand_type = %d\n", choice);
-    
-    item_def &item(env.item[unrand_item]);
-    item.pos = you.pos();
-    mprf("test: base_type = %d-%s, sub_type = %d-%s\n\n", item.base_type, base_type_string(item), 
-        item.sub_type, sub_type_string(item));
-    
-    _move_item_from_floor_to_inv(item);
-    destroy_item(coffer_item, true); 
-
-    return true;
+    return use_coffer_vault(coffer_item, choices);
 }
 
 string cannot_put_on_talisman_reason(const item_def& talisman, bool temp)

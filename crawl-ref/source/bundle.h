@@ -10,13 +10,13 @@ static item_skill_bundle bundle_options[] =
 {
     {
         "warrior", 
-        {{OBJ_COFFERS, COFFER_WEAPON_MAJOR}, {OBJ_COFFERS, COFFER_ARMOR_MINOR}}, 
-        {{SK_FIGHTING, 2}, {SK_SHIELDS, 2}},
+        {{OBJ_COFFERS, COFFER_WEAPON_MAJOR}, {OBJ_COFFERS, COFFER_AUX_MINOR}}, 
+        {{SK_FIGHTING, 2}, {SK_DODGING, 2}},
         false
     },
     {
         "bullwark", 
-        {{OBJ_COFFERS, COFFER_ARMOR_MAJOR}, {OBJ_COFFERS, COFFER_AUX_MINOR}}, 
+        {{OBJ_COFFERS, COFFER_ARMOR_MAJOR}, {OBJ_COFFERS, COFFER_ARMOR_MINOR}}, 
         {{SK_FIGHTING, 2}, {SK_ARMOUR, 2}},
         false
     },
@@ -41,7 +41,7 @@ static item_skill_bundle bundle_options[] =
     {
         "magi",
         {{OBJ_COFFERS, COFFER_MAGIC_MINOR}, {OBJ_COFFERS, COFFER_MAGIC_MAJOR}}, 
-        {{SK_SPELLCASTING, 2}, {SK_DODGING, 2}},
+        {{SK_SPELLCASTING, 3}, {SK_DODGING, 1}},
         true
     },
     // COFFER_WEAPON_MINOR, // not currently given

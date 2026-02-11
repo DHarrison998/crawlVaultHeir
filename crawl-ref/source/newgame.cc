@@ -522,11 +522,13 @@ static void _choose_char(newgame_def& ng, newgame_def& choice,
             continue;
         }
 
-// DANIEL, you left off here, testing if this is where the crash on clicking Inheritor 
-// is coming from. Seems like yes. Dive into this next time.
-        _choose_bundle(ng, choice, defaults); 
-
-        if (_choose_weapon(ng, choice, defaults))
+        if (job_gets_bundle_choice(ng.job))
+        {
+            // If we have a bundle choice we don't have a weapon choice, so we're done!
+            if (_choose_bundle(ng, choice, defaults))
+                return;
+        }
+        else if (_choose_weapon(ng, choice, defaults))
         {
             // We're done!
             return;
