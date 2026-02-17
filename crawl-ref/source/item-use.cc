@@ -3560,6 +3560,8 @@ bool use_coffer_vault(item_def& coffer)
     int i_choice = 0;
     vector<vector<unrand_type>> valid_choices;
     int skill_requirement = 0;
+    bool one_handed = (you.has_mutation(MUT_WIELD_OFFHAND)) ||  
+        (you.get_mutation_level(MUT_MISSING_HAND));
     switch (coffer_item.sub_type)
     {
     case COFFER_WEAPON_MINOR: 
@@ -3580,19 +3582,40 @@ bool use_coffer_vault(item_def& coffer)
     case COFFER_WEAPON_MAJOR:
         skill_requirement = get_coffer_skill_requirement(COFFER_WEAPON_MAJOR);
         if (skill_at_least(SK_SHORT_BLADES, skill_requirement))
-            valid_choices.push_back(coffer_short_blade);
+            if (one_handed)
+                valid_choices.push_back(coffer_short_blade_one_handed);
+            else
+                valid_choices.push_back(coffer_short_blade);
         if (skill_at_least(SK_LONG_BLADES, skill_requirement))
-            valid_choices.push_back(coffer_long_blade);
+            if (one_handed)
+                valid_choices.push_back(coffer_long_blade_one_handed);
+            else
+                valid_choices.push_back(coffer_long_blade);
         if (skill_at_least(SK_MACES_FLAILS, skill_requirement))
-            valid_choices.push_back(coffer_mace_and_flail);
+            if (one_handed)
+                valid_choices.push_back(coffer_mace_and_flail_one_handed);
+            else
+                valid_choices.push_back(coffer_mace_and_flail);
         if (skill_at_least(SK_AXES, skill_requirement))
-            valid_choices.push_back(coffer_axe);
+            if (one_handed)
+                valid_choices.push_back(coffer_axe_one_handed);
+            else
+                valid_choices.push_back(coffer_axe);
         if (skill_at_least(SK_POLEARMS, skill_requirement))
-            valid_choices.push_back(coffer_polearm);
+            if (one_handed)
+                valid_choices.push_back(coffer_polearm_one_handed);
+            else
+                valid_choices.push_back(coffer_polearm);
         if (skill_at_least(SK_RANGED_WEAPONS, skill_requirement))
-            valid_choices.push_back(coffer_ranged);
+            if (one_handed)
+                valid_choices.push_back(coffer_ranged_one_handed);
+            else
+                valid_choices.push_back(coffer_ranged);
         if (skill_at_least(SK_STAVES, skill_requirement)) // Daniel - Question, where should staves live? Alternate way to get staves from major magic coffer?
-            valid_choices.push_back(coffer_polearm);
+            if (one_handed)
+                valid_choices.push_back(coffer_polearm_one_handed);
+            else
+                valid_choices.push_back(coffer_polearm);
         ASSERT(valid_choices.size() > 0);
         i_choice = random2(valid_choices.size());
         choices = valid_choices[i_choice];
