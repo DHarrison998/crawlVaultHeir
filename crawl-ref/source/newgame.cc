@@ -1687,7 +1687,7 @@ static weapon_type _fixup_weapon(weapon_type wp,
     return WPN_UNKNOWN;
 }
 
-// Daniel - High, make sure bundle menu works, replace talisman
+// Daniel - Done. High, make sure bundle menu works, replace talisman
 static void _construct_bundle_menu(const newgame_def& ng,
                                    const int& default_index,
                                    const vector<item_skill_bundle>& bundles,
@@ -1820,7 +1820,8 @@ static void _construct_bundle_menu(const newgame_def& ng,
     }
 }
 
-// Daniel - High, change heir choice to bundle choice and hook up to bundles instead of talisman
+// Daniel - Done. High, change heir choice to bundle choice and hook up to bundles instead of talisman
+// Daniel - Med, fully support random and previous choice for coffer.
 /**
  * Returns false if user escapes
  */
